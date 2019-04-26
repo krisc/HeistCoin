@@ -1,0 +1,749 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"navigation",
+				"navigation-stack"
+			],
+			[
+				"navi",
+				"navigation-stack"
+			],
+			[
+				"nav",
+				"navigation-stack"
+			],
+			[
+				"install_and",
+				"install_and_setup_package_manager"
+			],
+			[
+				"pack",
+				"install_and_setup_package_manager"
+			],
+			[
+				"current",
+				"current-chat-id"
+			],
+			[
+				"message",
+				"message-text"
+			],
+			[
+				"upsert-",
+				"upsert-and-send"
+			],
+			[
+				"send",
+				"send-plain-text-message-fx"
+			],
+			[
+				"up",
+				"upsert-and-send"
+			],
+			[
+				"tx-object",
+				"tx-object-estimated-gas"
+			],
+			[
+				"web3",
+				"web3Provider"
+			],
+			[
+				"expe",
+				"expectedPetId"
+			],
+			[
+				"sign",
+				"signingKey"
+			],
+			[
+				"pending",
+				"pendingTransactions"
+			],
+			[
+				"mine",
+				"mineBlock"
+			],
+			[
+				"mining",
+				"miningReward"
+			],
+			[
+				"cal",
+				"calculateHash"
+			],
+			[
+				"previous",
+				"previousBlock"
+			],
+			[
+				"prev",
+				"previousHash"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "contracts/Leaderboard.sol",
+			"settings":
+			{
+				"buffer_size": 354,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "migrations/2_contract_migration.js",
+			"settings":
+			{
+				"buffer_size": 147,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "index.js",
+			"settings":
+			{
+				"buffer_size": 112,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "index.html",
+			"settings":
+			{
+				"buffer_size": 43905,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "package.json",
+			"settings":
+			{
+				"buffer_size": 326,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "truffle-config.js",
+			"settings":
+			{
+				"buffer_size": 4246,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"Package Control: ",
+				"Package Control: Install Package"
+			],
+			[
+				"pac",
+				"Package Control: Install Package"
+			],
+			[
+				"Install",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 0.0
+	},
+	"console":
+	{
+		"height": 0.0,
+		"history":
+		[
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/run/media/kris/storage/HeistCoin/build/contracts/Leaderboard.json",
+		"/run/media/kris/storage/HeistCoin/2_contract_migration.js",
+		"/run/media/kris/storage/status-im/status-react/src/status_im/ui/components/colors.cljs",
+		"/run/media/kris/storage/status-im/status-react/src/status_im/ui/screens/profile/components/views.cljs",
+		"/run/media/kris/storage/status-im/status-react/src/status_im/ui/screens/profile/user/views.cljs",
+		"/run/media/kris/storage/status-im/status-react/src/status_im/ui/screens/wallet/request/views.cljs",
+		"/run/media/kris/storage/status-im/status-react/src/status_im/ui/components/qr_code_viewer/views.cljs",
+		"/run/media/kris/storage/status-im/status-react/src/status_im/ui/screens/about_app/views.cljs",
+		"/run/media/kris/storage/status-im/status-react/src/status_im/utils/utils.cljs",
+		"/run/media/kris/storage/status-im/status-react/src/status_im/ui/components/qr_code_viewer/styles.cljs",
+		"/run/media/kris/storage/status-im/status-react/src/status_im/ui/screens/about_app/styles.cljs",
+		"/run/media/kris/storage/status-im/status-react/components/src/status_im/ui/components/react.cljs",
+		"/run/media/kris/storage/status-im/status-react/src/status_im/ui/screens/profile/components/styles.cljs",
+		"/run/media/kris/storage/status-im/status-react/src/status_im/ui/screens/profile/models.cljs",
+		"/run/media/kris/storage/status-im/status-react/translations/en.json",
+		"/run/media/kris/storage/status-im/status-react/react-native/src/mobile/status_im/react_native/js_dependencies.cljs",
+		"/run/media/kris/storage/status-im/status-react/react-native/src/cljsjs/cljsjs/react.cljs",
+		"/run/media/kris/storage/status-im/status-react/react-native/src/cljsjs/cljsjs/create_react_class.cljs",
+		"/run/media/kris/storage/status-im/status-react/react-native/src/cljsjs/cljsjs/react/dom.cljs",
+		"/run/media/kris/storage/status-im/status-react/src/status_im/react_native/resources.cljs",
+		"/run/media/kris/storage/status-im/status-react/src/status_im/ui/screens/profile/events.cljs",
+		"/run/media/kris/storage/status-im/status-react/src/status_im/events.cljs",
+		"/run/media/kris/storage/status-im/status-react/src/status_im/ui/screens/add_new/models.cljs",
+		"/run/media/kris/storage/status-im/status-react/src/status_im/ui/screens/browser/styles.cljs",
+		"/run/media/kris/storage/status-im/status-react/src/status_im/extensions/core.cljs",
+		"/home/kris/status-im/status-react/src/status_im/ui/components/dialog.cljs",
+		"/home/kris/status-im/status-react/src/status_im/ui/components/list_selection.cljs",
+		"/home/kris/status-im/status-react/src/status_im/browser/core.cljs",
+		"/home/kris/status-im/status-react/src/status_im/chat/models/message_content.cljs",
+		"/home/kris/status-im/status-react/src/status_im/chat/models.cljs",
+		"/home/kris/status-im/status-react/src/status_im/events.cljs",
+		"/home/kris/status-im/status-react/src/status_im/qr_scanner/core.cljs",
+		"/home/kris/status-im/status-react/src/status_im/ui/screens/add_new/models.cljs",
+		"/home/kris/models.cljs",
+		"/home/kris/status-im/status-react/env/dev/env/config.cljs",
+		"/home/kris/status-im/status-react/src/status_im/transport/message/protocol.cljs",
+		"/home/kris/status-im/status-react/src/status_im/chat/models/message.cljs",
+		"/home/kris/status-im/status-react/src/status_im/chat/models/input.cljs",
+		"/home/kris/status-im/status-react/src/status_im/ui/screens/chat/views.cljs",
+		"/home/kris/status-im/status-react/project.clj",
+		"/home/kris/status-im/status-react/src/status_im/chat/core.cljs",
+		"/home/kris/status-im/status-react/src/status_im/utils/universal_links/core.cljs",
+		"/home/kris/status-im/status-react/src/status_im/utils/navigation.cljs",
+		"/home/kris/status-im/status-react/src/status_im/ui/screens/add_new/new_chat/events.cljs",
+		"/home/kris/status-im/status-react/src/status_im/ui/screens/add_new/new_chat/navigation.cljs",
+		"/home/kris/status-im/status-react/src/status_im/ui/screens/add_new/new_chat/views.cljs",
+		"/home/kris/status-im/status-react/src/status_im/extensions/core.cljs",
+		"/home/kris/status-im/status-react/src/status_im/extensions/ethereum.cljs",
+		"/home/kris/status-im/status-react/src/status_im/constants.cljs",
+		"/home/kris/go/src/github.com/status-im/status-go/transactions/transactor.go",
+		"/home/kris/go/src/github.com/status-im/status-go/lib/library.go",
+		"/home/kris/status-im/status-react/src/status_im/ui/screens/navigation.cljs",
+		"/home/kris/status-im/status-react/src/status_im/ui/screens/qr_scanner/views.cljs",
+		"/home/kris/status-im/status-react/src/status_im/ui/components/camera.cljs",
+		"/home/kris/status-im/status-react/src/status_im/react_native/resources.cljs",
+		"/home/kris/status-im/status-react/src/status_im/utils/views.clj",
+		"/home/kris/status-im/status-react/src/status_im/ui/screens/add_new/views.cljs",
+		"/home/kris/status-im/status-react/src/status_im/ui/screens/wallet/request/views.cljs",
+		"/home/kris/status-im/status-react/src/status_im/ui/screens/profile/user/views.cljs",
+		"/home/kris/status-im/status-react/src/status_im/utils/fx.cljs",
+		"/home/kris/status-im/status-react/src/status_im/contact/core.cljs",
+		"/home/kris/status-im/status-react/src/status_im/node/core.cljs",
+		"/home/kris/status-im/status-react/src/status_im/utils/ethereum/core.cljs",
+		"/home/kris/status-im/status-react/src/status_im/js_dependencies.cljs",
+		"/home/kris/Project Name, Website, Twitter handle",
+		"/home/kris/status-im/status-react/src/status_im/ui/screens/routing/chat_stack.cljs",
+		"/home/kris/status-im/status-react/translations/en.json",
+		"/home/kris/status-im/status-react/src/status_im/ui/components/chat_icon/styles.cljs",
+		"/home/kris/status-im/status-react/src/status_im/ui/components/chat_icon/screen.cljs",
+		"/home/kris/status-im/status-react/src/status_im/ui/screens/chat/styles/main.cljs",
+		"/home/kris/status-im/status-react/src/status_im/ui/screens/chat/toolbar_content.cljs",
+		"/home/kris/status-react/src/status_im/extensions/core.cljs",
+		"/home/kris/status-react/src/status_im/chat/models/input.cljs",
+		"/home/kris/status-react/src/status_im/extensions/ethereum.cljs",
+		"/home/kris/blog/20190217_musician",
+		"/home/kris/status-react/src/status_im/chat/models/message.cljs",
+		"/home/kris/status-react/src/status_im/utils/fx.cljs",
+		"/home/kris/status-react/src/status_im/utils/datetime.cljs",
+		"/home/kris/status-react/src/status_im/chat/commands/input.cljs",
+		"/home/kris/status-im/status-react/scripts/run-environment-check.sh",
+		"/home/kris/status-im/status-react/Makefile",
+		"/home/kris/status-im/status-react/scripts/lib/setup/installers.sh",
+		"/home/kris/status-im/status-react/scripts/setup",
+		"/home/kris/status-react/scripts/setup",
+		"/home/kris/status-react/Makefile",
+		"/home/kris/status-react/scripts/lib/setup/installers.sh",
+		"/home/kris/status-react/src/status_im/utils/navigation.cljs",
+		"/home/kris/status-react/src/status_im/qr_scanner/core.cljs",
+		"/home/kris/status-react/src/status_im/contact/core.cljs",
+		"/home/kris/status-react/src/status_im/ui/screens/add_new/models.cljs",
+		"/home/kris/status-react/src/status_im/events.cljs",
+		"/home/kris/status-react/src/status_im/ui/screens/add_new/new_chat/views.cljs",
+		"/usr/share/applications/brave-bin.desktop",
+		"/home/kris/status-react/src/status_im/ui/screens/add_new/views.cljs",
+		"/home/kris/status-react/src/status_im/ui/screens/navigation.cljs",
+		"/home/kris/status-react/src/status_im/utils/handlers.cljs",
+		"/home/kris/status-react/src/status_im/ui/screens/qr_scanner/views.cljs",
+		"/home/kris/status-react/src/status_im/ui/screens/qr_scanner/styles.cljs",
+		"/home/kris/status-react/src/status_im/ui/screens/qr_scanner/db.cljs",
+		"/home/kris/status-react/translations/en.json",
+		"/home/kris/status-react/src/status_im/chat/models.cljs",
+		"/home/kris/status-react/src/status_im/transport/message/protocol.cljs",
+		"/home/kris/status-react/src/status_im/ui/screens/chat/message/message.cljs",
+		"/home/kris/status-react/src/status_im/ui/screens/chat/views.cljs",
+		"/home/kris/status-react/src/status_im/ui/screens/views.cljs",
+		"/home/kris/status-react/src/status_im/ui/screens/main_tabs/views.cljs",
+		"/home/kris/status-react/src/status_im/ui/components/styles.cljs",
+		"/home/kris/status-react/src/status_im/i18n.cljs",
+		"/home/kris/status-react/src/status_im/i18n.clj",
+		"/home/kris/status-react/src/status_im/ui/components/icons/vector_icons.cljs",
+		"/home/kris/status-react/src/status_im/ui/screens/main_tabs/styles.cljs",
+		"/home/kris/core.cljs",
+		"/home/kris/status-react/src/status_im/ui/screens/extensions/add/events.cljs",
+		"/home/kris/status-react/src/status_im/extensions/registry.cljs",
+		"/home/kris/status-react/src/status_im/ui/screens/db.cljs",
+		"/home/kris/status-react/src/status_im/transport/db.cljs",
+		"/home/kris/status-react/src/status_im/web3/events.cljs",
+		"/home/kris/status-react/src/status_im/utils/db.cljs",
+		"/home/kris/status-react/src/status_im/ui/screens/add_new/db.cljs",
+		"/home/kris/status-react/src/status_im/ui/screens/extensions/db.cljs",
+		"/home/kris/status-react/src/status_im/mailserver/db.cljs",
+		"/home/kris/status-react/src/status_im/accounts/db.cljs",
+		"/home/kris/status-react/src/status_im/browser/db.cljs",
+		"/home/kris/status-react/src/status_im/chat/db.cljs",
+		"/home/kris/status-react/src/status_im/chat/commands/specs.cljs",
+		"/home/kris/status-react/src/status_im/contact/db.cljs",
+		"/home/kris/status-react/src/status_im/core.cljs",
+		"/home/kris/blog/20190219_programmer"
+	],
+	"find":
+	{
+		"height": 40.0
+	},
+	"find_in_files":
+	{
+		"height": 104.0,
+		"where_history":
+		[
+			""
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"gethigh",
+			"script",
+			"exchange",
+			"car.coin",
+			"i ",
+			"i",
+			"j",
+			"this",
+			"bank",
+			"jail",
+			"gameWidth",
+			"this.cameras.main.width",
+			"qr",
+			"utils",
+			"action-fn",
+			"background",
+			"code-view",
+			"footer-style",
+			"colors",
+			"share",
+			"qr",
+			"background",
+			"color",
+			"legend",
+			"qr-code",
+			"log",
+			"clipboard",
+			"link",
+			"react",
+			"log",
+			"url",
+			":text",
+			"list",
+			"qr",
+			"qr-scanner",
+			"head",
+			"url",
+			"link",
+			"send-direct-message",
+			":shh/send-direct-message",
+			"send-direct",
+			"send",
+			"upsert-and-send",
+			"add-message-type",
+			"send-message",
+			"chat.message",
+			"chat.input",
+			"set-chat-ui-props",
+			"chat.ui",
+			"set-chat-ui-props",
+			"log",
+			"browse",
+			"log",
+			"handle-message",
+			"route-url",
+			"show-browser",
+			"message-link",
+			"link",
+			"handle",
+			"show-browser",
+			"plain-text-message-fx",
+			"chat.input",
+			"chat.ui",
+			"url",
+			"browser/show-browser-selection",
+			"list",
+			"qr",
+			"browser.ui",
+			"[status-im.browser.core :as browser]",
+			"message-lin",
+			"api",
+			"send",
+			"sign",
+			"raw",
+			"navigate-to",
+			"qr-scanner",
+			"onBarCodeRead",
+			"qr-scanner",
+			"qr-scan",
+			"send-transaction",
+			"ethereum/sign",
+			"raw",
+			"send-transaction",
+			"show-browser-selection",
+			"browser/han",
+			"browser",
+			"letsubs",
+			"navigate-to-clean",
+			"log/debug",
+			"debug",
+			"navigate-to-cofx",
+			"navigate-to-clean",
+			"navigate-to-cofx",
+			"add-new.models",
+			"models",
+			"add-new",
+			"fx",
+			"upsert-contact",
+			"merge",
+			"navigate-back",
+			"clean",
+			"navigate-to",
+			"navigate-back",
+			"navigate-to-clean",
+			"navigate-back",
+			"navigate-to-cofx",
+			"clean",
+			"qr-scanner",
+			"navigate-back",
+			"stack",
+			"log/debug",
+			"log",
+			"log/debug",
+			"navigate-to-clean",
+			"navigate-to-cofx",
+			"qr-code",
+			"navigation",
+			"navigate-to",
+			"chat.command/send-message",
+			"qr-scanner",
+			"chat.command/send-message",
+			"qr-scanner",
+			"todo",
+			"navigate-to-clean",
+			"navigate-to-cofx",
+			"navigation",
+			"navigate-to-cofx",
+			"qr-scanner"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"player",
+			"car_coin",
+			"starting_y",
+			"0",
+			"game",
+			"exchange",
+			"gameWidth"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 3,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "contracts/Leaderboard.sol",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 354,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								354,
+								354
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Ethereum/Solidity.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "migrations/2_contract_migration.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 147,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								147,
+								147
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "index.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 112,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								45,
+								45
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "index.html",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 43905,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								630,
+								634
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 532.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "package.json",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 326,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								89,
+								89
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JSON.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "truffle-config.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 4246,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 532.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 28.0
+	},
+	"input":
+	{
+		"height": 0.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "HeistCoin.sublime-project",
+	"replace":
+	{
+		"height": 52.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 150.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

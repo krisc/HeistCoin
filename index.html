@@ -1,0 +1,1505 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+  <script type="text/javascript" src="web3.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/3.16.2/phaser.min.js">
+  </script>
+</head>
+
+<body>
+
+  <script>
+
+  // if(typeof window.web3 !== "undefined" && typeof window.web3.currentProvider !== "undefined") {
+  //   var web3 = new Web3(web3.currentProvider);
+  //   console.log("there is a provider");
+  //   console.dir(web3);
+  // } else {
+  //   var web3 = new Web3();
+  //   console.log("there is no provider. use localhost");
+  //   web3.setProvider('ws://localhost:7545');
+  // }
+  
+  // let instance = await Leaderboard.deployed()
+  // web3.eth.defaultAccount = web3.eth.accounts[0];
+  // console.log(web3.eth.defaultAccount);
+
+  // const LeaderboardContract = web3.eth.contract([
+  // {
+  //   "constant": true,
+  //   "inputs": [],
+  //   "name": "getHighscore",
+  //   "outputs": [
+  //     {
+  //       "name": "",
+  //       "type": "uint256"
+  //     }
+  //   ],
+  //   "payable": false,
+  //   "stateMutability": "view",
+  //   "type": "function"
+  // },
+  // {
+  //   "constant": false,
+  //   "inputs": [
+  //     {
+  //       "name": "value",
+  //       "type": "uint256"
+  //     }
+  //   ],
+  //   "name": "setHighscore",
+  //   "outputs": [
+  //     {
+  //       "name": "",
+  //       "type": "bool"
+  //     }
+  //   ],
+  //   "payable": false,
+  //   "stateMutability": "nonpayable",
+  //   "type": "function"
+  // }]);
+  // console.log("loaded contract");
+  // console.dir(LeaderboardContract);
+  // const Leaderboard = LeaderboardContract.at('0xa34e44001812fddfa0a856250a773066cbc4825b');
+  // console.log("instantiated contract at address");
+  // console.dir(Leaderboard);
+
+  var LeaderboardContract;
+  var Leaderboard;
+  var personalHighscore;
+
+  var config = {
+  type: Phaser.WEBGL,
+  parent: 'phaser-example',
+  width: 1000,
+  height: 600,
+  backgroundColor: 'black',
+  scene: {
+      preload: preload,
+      create: create,
+      update: update
+  },
+  pixelArt: true,
+  audio: {
+      disableWebAudio: true
+  }};
+
+
+//globals
+var sound_on = true;
+//audio
+var theme;
+var game_over_sound;
+var theme2
+var heistCoin;
+var caught_sound;
+var coin_get_sound;
+var exchange_sound;
+var robbery_sound;
+
+var title;
+var game_over = false;
+var press_text;
+var gameWidth = 800;
+var car;
+var car_coin;
+var car_coin_text;
+var player_text;
+var player_arrow;
+var player_text_lag = 200;
+var score = 0;
+var highscore = 0;
+var score_text;
+var highscore_text;
+var coin_icon;
+var price_arrow;
+var coins = new Array();
+var coins_got = 0;
+var cops = new Array();
+var cops_max = 12;
+var cops_active = 0;
+var points = new Array();
+var banks = new Array();
+var banks_num = 3;
+var jail;
+var isRoad_prob = 4;
+var notRoad_prob = 0;
+var graph_points = new Array();
+var grass_images = new Array();
+var grass;
+var road_images = new Array();
+var exit;
+var point_images = new Array();
+var building_images = new Array();
+var exchange_text;
+var exchange_arrow;
+var size = 6;
+var lag_frames = 100;
+var exchange_lag = 200;
+var intro_lag = lag_frames;
+var rob_lag = 100;
+var car_speed = 1;
+var time = 0;
+var print_freq = 2;
+var time_to_drop = 60 * 30;
+var time_to_rise = 60 * 20;
+var town_num = 0;
+// var game = new Phaser.Game(config);
+var game;
+var COLORS = ['blue','gray','green','magenta','pink'];
+var car_color = '';
+var VALUE_INIT = 20;
+var price_direction = 1;
+// var VALUE_INIT = 0;
+// var CEILING_INIT = 20;
+// var CEILING_INIT = this.cameras.main.height - this.cameras.main.height/12;
+
+function checkIsRoad (car_x, car_y, direction, isPlayer)
+{
+  // if(points[car_y][car_x].exit && car.y_coord == car_y && car.x_coord == car_x && direction == "left") {
+  if(points[car_y][car_x].exit && isPlayer && direction == "left"){
+    console.log("this is the exit");
+    return true;
+  }
+
+  var dir;
+  var rev;
+  var move_x;
+  if(direction == "up") {
+    dir = 0;
+    rev = 2;
+    move_x = car_x;
+    move_y = car_y-1;
+  } else if(direction == "right") {
+    dir = 1;
+    rev = 3;
+    move_x = car_x+1;
+    move_y = car_y;
+  } else if(direction == "down") {
+    dir = 2;
+    rev = 0;
+    move_x = car_x;
+    move_y = car_y+1;
+  } else if(direction == "left") {
+    dir = 3;
+    rev = 1;
+    move_x = car_x-1;
+    move_y = car_y;
+  }
+
+  if(move_x < 0 || move_y < 0 ||
+     move_x >= size || move_y >= size){
+    return false;
+  }
+  if (points[car_y][car_x].roads[dir] > 0
+      && points[move_y][move_x].roads[rev] > 0) {
+    return true;
+  } else{
+    return false;
+  }
+}
+
+function noRoads (x,y) {
+  if(checkIsRoad(x,y,"up")){
+    return false;
+  }
+  if(checkIsRoad(x,y,"right")){
+    return false;
+  }
+  if(checkIsRoad(x,y,"down")){
+    return false;
+  }
+  if(checkIsRoad(x,y,"left")){
+    return false;
+  }
+  return true;
+}
+
+function preload ()
+{
+    Leaderboard.getHighscore( (error,result) => {        
+                              if(!error) {                    
+                                personalHighscore = result.c[0];
+                                console.log("Leaderboard.getHighscore returned: " + personalHighscore);
+                              } else {
+                                personalHighscore = 0;
+                                console.log("Leaderboard.getHighscore: player has no record");
+                                console.dir(error);
+                              }
+                            });
+
+
+    this.load.image('green', 'assets/green.png');
+    this.load.image('red', 'assets/red.png');
+    this.load.image('grass', 'assets/grass.gif');
+    this.load.image('black', 'assets/blackbox.gif');
+    this.load.image('point', 'assets/map_point.gif');
+    this.load.image('road_x', 'assets/road_x.gif');
+    this.load.image('road_y', 'assets/road_y.gif');
+    var rand = Phaser.Math.Between(0, COLORS.length-1);
+    car_color = COLORS[rand];
+    this.load.spritesheet('car_' + car_color, 
+      'assets/car_spritesheet_' + car_color + '.gif',
+      { frameWidth: 16, frameHeight: 48/3 }
+    );
+    this.load.spritesheet('arrow', 'assets/arrow_spritesheet.gif',
+      { frameWidth: 12, frameHeight: 6 }
+    );
+    this.load.spritesheet('price_arrow', 'assets/arrows_spritesheeet.gif',
+      { frameWidth: 16, frameHeight: 32 }
+    );
+    
+    this.load.spritesheet('exit', 'assets/exit_signs_spritesheet.gif',
+      { frameWidth: 9, frameHeight: 9 }
+    );
+    this.load.spritesheet('title', 'assets/title_spritesheet.gif',
+      { frameWidth: 102, frameHeight: 49 }
+    );
+    this.load.spritesheet('coin', 
+        'assets/coin_spritesheet.gif',
+        { frameWidth: 16, frameHeight: 16 }
+    );
+    this.load.spritesheet('cop', 
+        'assets/cop_spritesheet.gif',
+        { frameWidth: 16, frameHeight: 48/3 }
+    );
+    this.load.spritesheet('bank', 
+        'assets/building_bank_spritesheet.gif',
+        { frameWidth: 20, frameHeight: 26 }
+    );
+    this.load.spritesheet('exchange', 
+        'assets/building_exchange_spritesheet.gif',
+        { frameWidth: 20, frameHeight: 26 }
+    );
+    this.load.spritesheet('exchange_text', 
+        'assets/exchange_text_spritesheet.gif',
+        { frameWidth: 33, frameHeight: 15/3 }
+    );
+    this.load.spritesheet('player_text', 
+        'assets/player_text_spritesheet.gif',
+        { frameWidth: 23, frameHeight: 15/3 }
+    );
+    this.load.spritesheet('jail', 
+        'assets/building_cops_spritesheet.gif',
+        { frameWidth: 20, frameHeight: 26 }
+    );
+
+    this.load.audio('theme', 'assets/music/Heistcoin Theme Full Loopable.mp3');
+    this.load.audio('theme2', 'assets/music/Heistcoin Chase Short Loopable.mp3');
+    this.load.audio('game_over_sound', 'assets/music/Heistcoin game over 1.mp3');
+    this.load.audio('caught_sound', 'assets/sfx/caught.mp3');
+    this.load.audio('coin_get_sound', 'assets/sfx/coin_get.mp3');
+    this.load.audio('exchange_sound', 'assets/sfx/exchange.mp3');
+    this.load.audio('robbery_sound', 'assets/sfx/robbery.mp3');
+    this.load.audio('heistCoin', 'assets/sfx/Heistcoin!.mp3');
+}
+
+function showPressText(game) {
+  var msg_text = "Start";
+  if(game_over) {
+    msg_text = "Play Again";
+  }
+  press_text = game.add.text(game.cameras.main.width/2, game.cameras.main.height - 100, price.value, { fontFamily: '"Roboto Condensed"',
+  fontSize: 24}).setText("Press Arrow Keys to " + msg_text).setOrigin(.5);
+  press_text.alpha = 1;
+  press_text.depth = 105;
+
+}
+
+function resetGame (game) {
+  town_num++;
+  theme.volume = .5;
+  theme2.volume = 0;
+  //draw grass 16x16
+  var x_offset = - 64;
+  var y_offset = 0;
+  var alpha = Phaser.Math.Between(45,65);
+  alpha = alpha / 100;
+  console.log("random alpha = " + alpha);
+  // grass = game.add.image( 0, 0, 'green');
+  // grass.setScale(800, 1000);
+  // grass.scaleX = 800;
+  // grass.scaleY = 600;
+
+  for(var i = 0; i < grass_images.length; i++){
+    if(grass_images.length>0){
+      // console.log("destroying grass");
+      grass_images[i].destroy();
+    }
+  }
+  grass_images = new Array();
+  
+  for(var i = 0; i < 10; i++){
+    for(var j = 0; j < 14; j++){
+      var grass = game.add.image( j *64 + x_offset , i*64 + y_offset, 'grass');
+      grass.setScale(4);
+      grass.alpha = alpha;
+      // console.log("adding grass to " + grass.x + ", " + grass.y);
+      grass_images.push(grass);
+    }
+  }
+
+  //points
+  points = new Array();
+  for (var i = 0; i < size; i++) {
+    var row = new Array();
+    for (var j = 0; j < size; j++) {
+      var x_coord = j * gameWidth/size + gameWidth/(size*2);
+      var y_coord = i * game.cameras.main.height/size + game.cameras.main.height/(size*2);
+
+      var roads = new Array();
+      var this_notRoad_prob;
+      var this_isRoad_prob;
+      if(town_num > 1){
+        this_notRoad_prob = notRoad_prob;
+        this_isRoad_prob = isRoad_prob;
+      } else {
+        console.log("first level. make it easy");
+        this_notRoad_prob = 1;
+        this_isRoad_prob = isRoad_prob;
+      }
+      roads[0] = Phaser.Math.Between(this_notRoad_prob, this_isRoad_prob);
+      roads[1] = Phaser.Math.Between(this_notRoad_prob, this_isRoad_prob);
+      roads[2] = Phaser.Math.Between(this_notRoad_prob, this_isRoad_prob);
+      roads[3] = Phaser.Math.Between(this_notRoad_prob, this_isRoad_prob);
+      // console.log(roads);
+      row.push({"x":x_coord,"y":y_coord,"roads":roads});
+    }
+    points.push(row);
+  }
+  // create roads
+
+  //clear road array
+  for (var i = 0; i < road_images.length; i++) {
+    if(road_images.length > 0){
+      // console.log("destroying road image");
+      road_images[i].destroy();
+    }
+  }
+
+  // initialize to empty array
+  road_images = new Array();
+  for (var i = 0; i < size; i++) {
+    var row = new Array();
+    for (var j = 0; j < size; j++) {
+      if(checkIsRoad(j, i, "up")){
+        var offset_vert = 4.25;
+        var road_y1 = game.add.image( j * gameWidth/size + gameWidth/(size*2), i * game.cameras.main.height/size + game.cameras.main.height/(size*offset_vert), 'road_y');
+        road_y1.setScale(4);
+        road_images.push(road_y1);
+        var road_y2 = game.add.image( j * gameWidth/size + gameWidth/(size*2), i * game.cameras.main.height/size + game.cameras.main.height/(size*offset_vert) - road_y1.height*4, 'road_y');
+        road_y2.setScale(4);
+        road_images.push(road_y2);
+        var road_y3 = game.add.image( j * gameWidth/size + gameWidth/(size*2), i * game.cameras.main.height/size + game.cameras.main.height/(size*offset_vert) - road_y2.height*8, 'road_y');
+        road_y3.setScale(4);
+        road_images.push(road_y3);
+        var road_y4 = game.add.image( j * gameWidth/size + gameWidth/(size*2), i * game.cameras.main.height/size + game.cameras.main.height/(size*offset_vert) - road_y3.height*12, 'road_y');
+        road_y4.setScale(4);
+        road_images.push(road_y4);
+
+      }
+      if(checkIsRoad(j, i, "right")){
+        var offset = 1.75;
+        var road_x1 = game.add.image( j * gameWidth/size + gameWidth/(size*offset), i * game.cameras.main.height/size + game.cameras.main.height/(size*2), 'road_x');
+        road_x1.setScale(4);
+        road_images.push(road_x1);
+        var road_x2 = game.add.image( j * gameWidth/size + gameWidth/(size*offset) + road_x1.width*4, i * game.cameras.main.height/size + game.cameras.main.height/(size*2), 'road_x');
+        road_x2.setScale(4);
+        road_images.push(road_x2);
+        var road_x3 = game.add.image( j * gameWidth/size + gameWidth/(size*offset) + road_x2.width*8, i * game.cameras.main.height/size + game.cameras.main.height/(size*2), 'road_x');
+        road_x3.setScale(4);
+        road_images.push(road_x3);
+        var road_x4 = game.add.image( j * gameWidth/size + gameWidth/(size*offset) + road_x3.width*12, i * game.cameras.main.height/size + game.cameras.main.height/(size*2), 'road_x');
+        road_x4.setScale(4);
+        road_images.push(road_x4);
+        var road_x5 = game.add.image( j * gameWidth/size + gameWidth/(size*offset) + road_x4.width*16, i * game.cameras.main.height/size + game.cameras.main.height/(size*2), 'road_x');
+        road_x5.setScale(4);
+        road_images.push(road_x5);
+        var road_x6 = game.add.image( j * gameWidth/size + gameWidth/(size*offset) + road_x5.width*20, i * game.cameras.main.height/size + game.cameras.main.height/(size*2), 'road_x');
+        road_x6.setScale(4);
+        road_images.push(road_x6);
+        var road_x7 = game.add.image( j * gameWidth/size + gameWidth/(size*offset) + road_x6.width*24, i * game.cameras.main.height/size + game.cameras.main.height/(size*2), 'road_x');
+        road_x7.setScale(4);
+        road_images.push(road_x7);
+        // console.log("road.width =" + road_x.width);
+        
+      }
+    }  
+  }
+
+  //draw points
+  for(var i = 0; i < point_images.length; i++) {
+    if(point_images.length > 0) {
+      // console.log("destroying point images");
+      point_images[i].destroy();
+    }
+  }
+  point_images = new Array();
+  for (var i = 0; i < size; i++) {
+    var row = new Array();
+    for (var j = 0; j < size; j++) {
+      if (!noRoads(i,j)) {
+        var image = game.add.image( points[j][i].x, points[j][i].y, 'point');
+        points[j][i].isPoint = true;
+        image.setScale(4);
+        point_images.push(image);
+      }
+
+    }
+  }
+
+  //search edges for starting point
+  var starting_x = 0;
+  var starting_y = Phaser.Math.Between(0, size-1);;
+
+  while(!points[starting_y][starting_x].isPoint) {
+    starting_y = Phaser.Math.Between(0, size-1);
+  }
+
+  //set exit
+  points[starting_y][starting_x].exit = true;
+  var offset = 1.75;
+  var road_x1 = game.add.image( -gameWidth/size + gameWidth/(size*offset), starting_y* game.cameras.main.height/size + game.cameras.main.height/(size*2), 'road_x');
+  road_x1.setScale(4);
+  road_images.push(road_x1);
+  var road_x2 = game.add.image( -gameWidth/size + gameWidth/(size*offset) + road_x1.width*4, starting_y* game.cameras.main.height/size + game.cameras.main.height/(size*2), 'road_x');
+  road_x2.setScale(4);
+  road_images.push(road_x2);
+  var road_x3 = game.add.image( -gameWidth/size + gameWidth/(size*offset) + road_x2.width*8, starting_y* game.cameras.main.height/size + game.cameras.main.height/(size*2), 'road_x');
+  road_x3.setScale(4);
+  road_images.push(road_x3);
+  var road_x4 = game.add.image( -gameWidth/size + gameWidth/(size*offset) + road_x3.width*12, starting_y* game.cameras.main.height/size + game.cameras.main.height/(size*2), 'road_x');
+  road_x4.setScale(4);
+  road_images.push(road_x4);
+  var road_x5 = game.add.image( -gameWidth/size + gameWidth/(size*offset) + road_x4.width*16, starting_y* game.cameras.main.height/size + game.cameras.main.height/(size*2), 'road_x');
+  road_x5.setScale(4);
+  road_images.push(road_x5);
+  var road_x6 = game.add.image( -gameWidth/size + gameWidth/(size*offset) + road_x5.width*20, starting_y* game.cameras.main.height/size + game.cameras.main.height/(size*2), 'road_x');
+  road_x6.setScale(4);
+  road_images.push(road_x6);
+  var road_x7 = game.add.image( -gameWidth/size + gameWidth/(size*offset) + road_x6.width*24, starting_y* game.cameras.main.height/size + game.cameras.main.height/(size*2), 'road_x');
+  road_x7.setScale(4);
+  road_images.push(road_x7);
+
+  if(exit) {
+    exit.destroy();
+  }
+  exit = game.add.sprite(25, road_x5.y- 30, 'exit');
+  exit.alpha = 0;
+  exit.setScale(4);
+  exit.depth = 100;
+  game.anims.create({
+    key: 'exit',
+    frames: game.anims.generateFrameNumbers('exit', { start: 0, end: 5 }),
+    loop: true,
+    frameRate: 7,
+    repeat: -1
+  });
+  exit.anims.play('exit');
+  
+
+  // banks
+  console.log("building_images.length = " + building_images.length)
+  for(var i = 0; i < building_images.length; i++){
+    if(building_images.length > 0) {
+      // console.log("destroying building images");
+      building_images[i].destroy();
+    }
+  }
+
+  banks = new Array();
+  for(var i = 0; i < banks_num; i++){
+
+    var rand_x = Phaser.Math.Between(0, size-1);
+    var rand_y = Phaser.Math.Between(0, size-1);
+
+    while(!points[rand_y][rand_x].isPoint || points[rand_y][rand_x].hasBuilding || points[rand_y][rand_x].exit){
+      rand_x = Phaser.Math.Between(0, size-1);
+      rand_y = Phaser.Math.Between(0, size-1);
+    }
+
+
+    
+    var bank = game.add.sprite(points[rand_y][rand_x].x, points[rand_y][rand_x].y, 'bank');
+    bank.x_coord = rand_x;
+    bank.y_coord = rand_y;
+    game.anims.create({
+      key: 'idle_bank',
+      frames: game.anims.generateFrameNumbers('bank', { start: 0, end: 0 }),
+    });
+    game.anims.create({
+      key: 'rob_bank',
+      frames: game.anims.generateFrameNumbers('bank', { start: 0, end: 2 }),
+      frameRate: 7,
+      repeat: 3
+    });
+    
+    bank.anims.play('idle_bank', true);
+    bank.setScale(3);
+    building_images.push(bank);
+    banks.push(bank);
+    points[rand_y][rand_x].hasBuilding = "bank";
+    console.log("bank created at " + rand_x + ", " + rand_y);
+  }  
+
+  
+  // exchange
+  exchange_x = Phaser.Math.Between(0, size-1);
+  exchange_y = Phaser.Math.Between(0, size-1);
+
+
+  while(!points[exchange_y][exchange_x].isPoint || points[exchange_y][exchange_x].hasBuilding || points[exchange_y][exchange_x].exit){
+    exchange_x = Phaser.Math.Between(0, size-1);
+    exchange_y = Phaser.Math.Between(0, size-1);
+  }
+  exchange = game.add.sprite(points[exchange_y][exchange_x].x, points[exchange_y][exchange_x].y, 'exchange');
+  game.anims.create({
+      key: 'idle_exchange',
+      frames: game.anims.generateFrameNumbers('exchange', { start: 0, end: 0 }),
+    });
+    game.anims.create({
+      key: 'deposit_exchange',
+      frames: game.anims.generateFrameNumbers('exchange', { start: 0, end: 1 }),
+      frameRate: 7,
+      yoyo: true,
+      repeat: 11
+    });
+    
+  exchange.anims.play('idle_exchange', true);
+  exchange.setScale(3);
+  building_images.push(exchange);
+  points[exchange_y][exchange_x].hasBuilding = "exchange";
+  console.log("exchange created at " + exchange_x + ", " + exchange_y);
+
+  if(exchange_text){
+    exchange_text.destroy();
+  }
+  exchange_text = game.add.sprite(exchange.x, exchange.y-exchange.height*2-10, 'exchange_text');
+  game.anims.create({
+    key: 'exchange_text',
+    frames: game.anims.generateFrameNumbers('exchange_text', { start: 0, end: 2 }),
+    frameRate: 7,
+    repeat: -1
+  });
+  exchange_text.setScale(3);
+  exchange_text.anims.play('exchange_text', true);
+  exchange_text.depth = 2;
+
+
+  if(exchange_arrow){
+    exchange_arrow.destroy();
+  }
+  exchange_arrow = game.add.sprite(exchange.x, exchange_text.y+exchange_text.height*4, 'arrow');
+  game.anims.create({
+    key: 'arrow',
+    frames: game.anims.generateFrameNumbers('arrow', { start: 0, end: 3 }),
+    frameRate: 7,
+    repeat: -1
+  });
+  exchange_arrow.setScale(4);
+  exchange_arrow.anims.play('arrow', true);
+  exchange_arrow.depth = 2;
+  exchange_text.alpha = 0;
+  exchange_arrow.alpha = 0;
+
+  //reset coins
+  coins = new Array();
+  coins_got = 0;
+  car_coin.alpha = 0;
+  car_coin_text.alpha = 0;
+
+  // "jail"
+  jail_x = 0
+  jail_y = starting_y;
+
+
+  // while(!points[jail_y][jail_x].isPoint || points[jail_y][jail_x].hasBuilding || points[jail_y][jail_x].exit){
+  //   jail_x = Phaser.Math.Between(0, size-1);
+  //   jail_y = Phaser.Math.Between(0, size-1);
+  // }
+
+  points[jail_y][jail_x].hasBuilding = "jail";
+  jail = game.add.sprite(points[jail_y][jail_x].x, points[jail_y][jail_x].y, 'jail');
+  game.anims.create({
+    key: 'idle_jail',
+    frames: game.anims.generateFrameNumbers('jail', { start: 0, end: 0 }),
+  });
+  game.anims.create({
+    key: 'alarm_jail',
+    frames: game.anims.generateFrameNumbers('jail', { start: 0, end: 4 }),
+    frameRate: 7,
+    repeat: 2,
+    yoyo: true
+  });
+  jail.anims.play('idle_jail', true);
+  jail.setScale(3);
+  building_images.push(jail);
+  console.log("jail created at " + jail_x + ", " + jail_y);
+
+
+  //create car
+
+  car.destroy();
+  car = game.add.sprite(points[starting_y][starting_x].x - 400/3, points[starting_y][starting_x].y, 'car_' + car_color);
+  car.setScale(4);
+  game.anims.create({
+    key: 'up',
+    frames: game.anims.generateFrameNumbers('car_' + car_color, { start: 0, end: 0 }),
+  });
+  game.anims.create({
+    key: 'right',
+    frames: game.anims.generateFrameNumbers('car_' + car_color, { start: 1, end: 1 }),
+  });
+  game.anims.create({
+    key: 'down',
+    frames: game.anims.generateFrameNumbers('car_' + car_color, { start: 2, end: 2 }),
+  });
+  car.anims.play('down', true);
+  car.isPlayer = true;
+  car.x_coord = starting_x;
+  car.y_coord = starting_y;
+  console.log("car starting position " + car.x_coord + ", " + car.y_coord);
+  car.lag = 0;
+  // console.log("car.x = " + car.x);
+  car.moving = "stop";
+
+  player_text = game.add.sprite(car.x, car.y-car.height*3-15, 'player_text');
+  game.anims.create({
+    key: 'player_text',
+    frames: game.anims.generateFrameNumbers('player_text', { start: 0, end: 2 }),
+    frameRate: 7,
+    repeat: -1
+  });
+  player_text.setScale(3);
+  player_text.anims.play('player_text', true);
+  player_text.depth = 2;
+
+
+  // if(player_arrow){
+  //   player_arrow.destroy();
+  // }
+  player_arrow = game.add.sprite(car.x, player_text.y+player_text.height*4, 'arrow');
+  game.anims.create({
+    key: 'arrow',
+    frames: game.anims.generateFrameNumbers('arrow', { start: 0, end: 3 }),
+    frameRate: 7,
+    repeat: -1
+  });
+  player_arrow.setScale(4);
+  player_arrow.anims.play('arrow', true);
+  player_arrow.depth = 2;
+  // player_text.alpha = 0;
+  // player_arrow.alpha = 0;
+
+  //cops
+  game.anims.create({
+    key: 'cop_up',
+    frames: game.anims.generateFrameNumbers('cop', { start: 0, end: 0 }),
+  });
+  game.anims.create({
+    key: 'cop_right',
+    frames: game.anims.generateFrameNumbers('cop', { start: 1, end: 1 }),
+  });
+  game.anims.create({
+    key: 'cop_down',
+    frames: game.anims.generateFrameNumbers('cop', { start: 2, end: 2 }),
+  });
+
+  for (var i = 0; i < cops.length; i++) {
+    if(cops.length > 0) {
+      // console.log("destorying cop sprites");
+      cops[i].destroy();
+    }
+  }
+  cops_active = 0;
+  cops = new Array();
+  for (var i = 0; i < cops_max; i++) {
+    var cop = game.add.sprite(points[jail_y][jail_x].x, points[jail_y][jail_x].y, 'cop');
+
+    cop.anims.play('cop_down', true);
+    cop.setScale(4);
+    cop.x_coord = jail_x;
+    cop.y_coord = jail_y;
+    cop.lag = 100;
+    cop.moving = "stop";
+    cop.active = false;
+    cop.alpha = 0;
+    cops.push(cop);
+  }
+  
+  highscore = personalHighscore;
+  highscore_text.setText("highscore: $" + highscore.toFixed(2));
+  console.log("highscore = " + highscore);
+  score_text.depth = 1;
+  highscore_text.depth = 1;
+  price.text.depth = 1;
+  coin_icon.depth = 1;
+  price_arrow.depth = 1;
+  // intro_lag = lag_frames;
+  // car.x = -66.666666666666666666666666666;
+  // console.log("car.x = " + car.x);
+}
+
+function gameOver(game) {
+  console.log("game over");
+  theme.stop();
+  theme2.stop();
+  game_over_sound.play();
+  if(highscore > personalHighscore) {
+    Leaderboard.setHighscore( highscore,
+        (error,result) => {
+          if(!error) {
+            console.log("success recording score: " + result);
+          } else {
+            console.log("error recording score");
+          }
+        });
+  }
+
+  // theme.play();
+
+  var x_offset = - 64;
+  var y_offset = 0;
+    
+  for(var i = 0; i < 11; i++){
+    for(var j = 0; j < 20; j++){
+      var black = game.add.image( j *64 + x_offset , i*64 + y_offset, 'black');
+      black.setScale(64*4);
+      black.depth = 100;
+    }
+  }
+
+  game_over = true;
+  car.lag = lag_frames;
+  var game_over_text = game.add.text(game.cameras.main.width/2, game.cameras.main.height/2 -50, price.value, { fontFamily: '"Roboto Condensed"',
+  fontSize: 44}).setText("GAME OVER").setOrigin(.5);
+  game_over_text.depth = 100;
+  var you_got = game.add.text(game.cameras.main.width/2, game_over_text.y + 50, price.value, { fontFamily: '"Roboto Condensed"',
+  fontSize: 24}).setText("You got").setOrigin(.5);
+  you_got.depth = 100;
+  var score_text = game.add.text(game.cameras.main.width/2, you_got.y + 50, price.value, { fontFamily: '"Roboto Condensed"',
+  fontSize: 24}).setText("$" + score.toFixed(2)).setOrigin(.5);
+  score_text.depth = 100;
+  
+}
+
+function create ()
+{
+  //audio
+  theme = this.sound.add('theme',{
+    mute: false,
+    volume: .5,
+    rate: 1,
+    detune: 0,
+    seek: 0,
+    loop: true,
+    delay: 0
+  });
+  heistCoin = this.sound.add('heistCoin',{
+    mute: false,
+    volume: 1,
+    rate: 1,
+    detune: 0,
+    seek: 0,
+    loop: false,
+    delay: 0
+  });
+
+  
+  game_over_sound  = this.sound.add('game_over_sound',{
+    mute: false,
+    volume: 1,
+    rate: 1,
+    detune: 0,
+    seek: 0,
+    loop: false,
+    delay: 0
+  });
+  theme2 = this.sound.add('theme2',{
+    mute: false,
+    volume: .5,
+    rate: 1,
+    detune: 0,
+    seek: 0,
+    loop: true,
+    delay: 0
+  });
+  caught_sound = this.sound.add('caught_sound',{
+    mute: false,
+    volume: 1,
+    rate: 1,
+    detune: 0,
+    seek: 0,
+    loop: false,
+    delay: 0
+  });
+  coin_get_sound = this.sound.add('coin_get_sound',{
+    mute: false,
+    volume: 1,
+    rate: 1,
+    detune: 0,
+    seek: 0,
+    loop: false,
+    delay: 0
+  });
+  exchange_sound = this.sound.add('exchange_sound',{
+    mute: false,
+    volume: 1,
+    rate: 1,
+    detune: 0,
+    seek: 0,
+    loop: false,
+    delay: 0
+  });
+  robbery_sound = this.sound.add('robbery_sound',{
+    mute: false,
+    volume: 1,
+    rate: 1,
+    detune: 0,
+    seek: 0,
+    loop: false,
+    delay: 0
+  });
+
+    if(sound_on) {
+      theme.play();
+      heistCoin.play();
+      theme2.play();
+      theme2.volume = 0;
+    }
+    // this.cameras.main.setBackgroundColor('rgba(255, 255, 255, 1)');
+    cursors = this.input.keyboard.createCursorKeys();
+
+    price = this.add.sprite(gameWidth, this.cameras.main.height - VALUE_INIT, 'green');
+    price.value = VALUE_INIT; 
+    price.growth_rate = .5;
+    price.offset_y = this.cameras.main.height - this.cameras.main.height/4;
+    graph_height = this.cameras.main.height - price.offset_y;
+    graph_width = this.cameras.main.width - 20;
+    price.peak = graph_height;
+    price.low = 20;
+    console.log("offset_y = " + price.offset_y);
+    console.log("initial peak = " + price.peak);
+
+    rand = Phaser.Math.Between(0, 1);
+
+
+    car = this.add.sprite(0, 0, 'car_' + car_color);
+    car_coin = this.add.sprite(car.x, car.y-car.height*3, 'coin');
+    car_coin_text = this.add.text(car_coin.x + car_coin.width + 10, car_coin.y, "x " + coins.length, { fontFamily: '"Roboto Condensed"'});
+    car_coin_text.setStyle({
+      align: 'center',
+    });
+
+    coin_icon = this.add.sprite(gameWidth + 5, 150, 'coin');
+    coin_icon.setScale(4);
+    coin_icon.setOrigin(0);
+    score_text = this.add.text(gameWidth + 5, 245, "score: $" + score.toFixed(2), { fontFamily: '"Roboto Condensed"'});
+
+    highscore_text = this.add.text(gameWidth + 5, 5, "highscore: $" + highscore.toFixed(2), { fontFamily: '"Roboto Condensed"'});
+
+    //make coin anims
+    this.anims.create({
+        key: 'coin_spin',
+        frames: this.anims.generateFrameNumbers('coin', { start: 0, end: 3 }),
+        frameRate: 7,
+        repeat: -1
+    });
+    coin_icon.anims.play('coin_spin');
+    this.anims.create({
+        key: 'coin_idle',
+        frames: this.anims.generateFrameNumbers('coin', { start: 0, end: 0 }),
+    });
+    car_coin.setScale(4);
+    car_coin.anims.play("coin_spin", true);
+    car_coin.alpha = 0;
+    console.log("coin alpha = " + car_coin.alpha);
+    car_coin_text.alpha = 0;
+    car.lag = 0;
+    // resetGame(this);
+
+    //HUD
+    price.text = this.add.text(gameWidth, this.cameras.main.height - graph_height - 20, "1 Coin = $" + price.value.toFixed(2), { fontFamily: '"Roboto Condensed"'});
+    price.text.setStyle({
+      align: 'center',
+    });
+    score_text = this.add.text(gameWidth, 245, "score: $" + score.toFixed(2), { fontFamily: '"Roboto Condensed"'});
+    highscore_text = this.add.text(gameWidth, 5, "highscore: $" + highscore.toFixed(2), { fontFamily: '"Roboto Condensed"'});
+    price_arrow = this.add.sprite(this.cameras.main.width, this.cameras.main.height - graph_height/2 + 50, 'price_arrow');
+    price_arrow.setOrigin(1);
+    
+    this.anims.create({
+      key: 'price_up',
+      frames: this.anims.generateFrameNumbers('price_arrow', { start: 0, end: 0 }),
+      repeat: -1
+    });
+    this.anims.create({
+      key: 'price_down',
+      frames: this.anims.generateFrameNumbers('price_arrow', { start: 1, end: 1 }),
+      repeat: -1
+    });
+
+    price_arrow.anims.play('price_up');
+
+    this.anims.create({
+      key: 'title',
+      frames: this.anims.generateFrameNumbers('title', { start: 0, end: 3 }),
+      frameRate: 7,
+      repeat: -1
+    });
+
+    var x_offset = - 64;
+    var y_offset = 0;
+      
+    for(var i = 0; i < 11; i++){
+      for(var j = 0; j < 20; j++){
+        var black = this.add.image( j *64 + x_offset , i*64 + y_offset, 'black');
+        black.setScale(64*4);
+      }
+    }
+    title = this.add.sprite(this.cameras.main.width/2,this.cameras.main.height/2, 'title');
+    title.anims.play('title');
+    title.setScale(4);
+    title.screen = true;
+    showPressText(this);
+    
+}
+
+function moveCar(car, dir) {
+  var anim_prefix;
+  if(car.isPlayer){
+    anim_prefix = "";
+  } else {
+    anim_prefix = "cop_";
+  }
+  switch(dir) {
+    case "left":
+      if(checkIsRoad(car.x_coord, car.y_coord, "left", car.isPlayer)) {
+        car.atExchange = false;
+        car.anims.play(anim_prefix+'right', true);
+        car.scaleX = Math.abs(car.scaleX) * -1;
+        car.lag = lag_frames;
+        car.moving = "left";
+        car.x_coord--;
+      }
+      break;
+    case "right":
+      if(checkIsRoad(car.x_coord, car.y_coord, "right",car.isPlayer)) {
+        car.atExchange = false;
+        car.anims.play(anim_prefix+'right', true);
+        car.scaleX = Math.abs(car.scaleX);
+        car.lag = lag_frames;
+        car.moving = "right";
+        car.x_coord++;
+      }
+      break;
+    case "down":
+      if(checkIsRoad(car.x_coord, car.y_coord, "down",car.isPlayer)) {
+        car.atExchange = false;
+        car.anims.play(anim_prefix+'down', true);
+        car.lag = lag_frames;
+        car.moving = "down";
+        car.y_coord++;
+      }
+      break;
+    case "up":
+      if(checkIsRoad(car.x_coord, car.y_coord, "up",car.isPlayer)) {
+        car.atExchange = false;
+        car.anims.play(anim_prefix+'up', true);
+        car.lag = lag_frames;
+        car.moving = "up";
+        car.y_coord--;
+      }
+      break;
+
+  }
+}
+
+function fluctuateGrowth (prev_rate) {
+  // lambad = 3.59
+  var lambda = 3.59;
+
+  var rate = lambda * prev_rate * (1 - prev_rate);
+  return rate;
+}
+
+function update ()
+{   
+    if(car.lag == 0) {
+
+      if (cursors.left.isDown) {
+
+        if(game_over) {
+          console.log("reloading");
+          location.reload();
+        } else if(title.screen) {
+          console.log("starting game");
+          resetGame(this);
+          title.screen = false;
+          title.alpha = 0;
+          press_text.alpha = 0;
+          car.lag = lag_frames;
+          car.anims.play('right', true);
+        }
+        else moveCar(car, "left");
+        // console.log("car x,y = " + car.x_coord + "," + car.y_coord);
+        
+      } else if (cursors.right.isDown) {
+        if(game_over) {
+          console.log("reloading");
+          location.reload();
+        } else if(title.screen) {
+          console.log("starting game");
+          resetGame(this);
+          title.screen = false;
+          title.alpha = 0;
+          press_text.alpha = 0;
+          car.lag = lag_frames;
+          car.anims.play('right', true);
+        }
+        else moveCar(car, "right");
+        // console.log("car x,y = " + car.x_coord + "," + car.y_coord);
+      } else if (cursors.down.isDown) {
+        if(game_over) {
+          console.log("reloading");
+          location.reload();
+        } else if(title.screen) {
+          console.log("starting game");
+          resetGame(this);
+          title.screen = false;
+          title.alpha = 0;
+          press_text.alpha = 0;
+          car.lag = lag_frames;
+          car.anims.play('right', true);
+        }
+        else moveCar(car, "down");
+        // console.log("car x,y = " + car.x_coord + "," + car.y_coord);
+      } else if (cursors.up.isDown) {
+        if(game_over) {
+          console.log("reloading");
+          location.reload();
+        } else if(title.screen) {
+          console.log("starting game");
+          resetGame(this);
+          title.screen = false;
+          title.alpha = 0;
+          press_text.alpha = 0;
+          car.lag = lag_frames;
+          car.anims.play('right', true);
+        }
+        else moveCar(car, "up");
+        // console.log("car x,y = " + car.x_coord + "," + car.y_coord);
+      }
+    } 
+
+    //car
+    if(car.lag > 0){
+      car.lag--;
+      // console.log(car.lag);
+      if(car.lag == 0){
+        console.log("no more lag");
+        if(coins.length > 0) {
+          if(car_coin.alpha == 0){
+            car_coin.alpha = 1;
+            coin_get_sound.play();
+          }
+
+          if(coins.length > 1) {
+            car_coin_text.setText("x " + coins.length);
+            car_coin_text.alpha = 1;
+          }
+        }
+
+        if(game_over) {
+          showPressText(this);
+        }
+
+        car.alpha = 1;
+        // for(var i = 0; i < coins.length; i++){
+        //     coins[i].alpha = 1;
+        // }
+        car.moving = "stop";
+        // car.anims.play('down', true);
+        if(car.x_coord < 0){
+          resetGame(this);
+        }
+        car.x = points[car.y_coord][car.x_coord].x;
+        car.y = points[car.y_coord][car.x_coord].y;
+        car_coin.x = car.x;
+        car_coin.y = car.y-car.height*3;
+        car_coin.depth = 1;
+        
+        car_coin_text.x = car_coin.x + car_coin.width + 10;
+        car_coin_text.y = car_coin.y;
+        car_coin_text.depth = 1;
+        
+        car_coin_text.depth = 1;
+
+        if(points[car.y_coord][car.x_coord].hasBuilding == "exchange" && !car.atExchange && coins.length > 0) {
+          console.log("depositing to exchange");
+          car.atExchange = true;
+          exchange_sound.play();
+          car.lag = exchange_lag;
+
+
+          exchange.anims.play("deposit_exchange", true);
+          car.alpha = 0;
+          car_coin.alpha = 0;
+          car_coin_text.alpha = 0;
+          for(var i = 0; i < coins.length; i++) {
+            score += price.value;
+            score_text.setText("score: $" + score.toFixed(2));
+
+            if(score > highscore) {
+              highscore = score;
+              highscore_text.setText("highscore: $" + highscore.toFixed(2));
+            }
+            coins.pop;
+            console.log("score = " + score);
+          }
+          coins = [];
+        }
+        
+
+        if(points[car.y_coord][car.x_coord].hasBuilding == "bank") {
+          console.log("robbing bank");
+          robbery_sound.play();
+          car.lag = rob_lag;
+
+          // check which bank is being robbed
+          var rob_bank;
+          for(var i = 0; i < banks.length; i++){
+            if(banks[i].x_coord == car.x_coord && banks[i].y_coord == car.y_coord) {
+              rob_bank = banks[i];
+              console.log("robbed bank is = " + i);
+            }
+          }
+          rob_bank.anims.play("rob_bank", true);
+          exchange_text.alpha = 1;
+          exchange_arrow.alpha = 1;
+
+          points[car.y_coord][car.x_coord].hasBuilding = "bank_robbed";
+          car.alpha = 0;
+          car_coin.alpha = 0;
+          car_coin_text.alpha = 0;
+          // var coin = this.add.sprite(car.x + coins.length*10, car.y-car.height*2, 'coin');
+          // coin.y = coin.y - coin.height;
+          // coin.setScale(4);
+          // coin.anims.play("coin_spin", true);
+          coins.push(1);
+          // if (coins.length > 1) {
+          //   for(var i = 0; i < coins.length; i++){
+          //     coins[i].anims.play("coin_idle", true);
+          //   }
+          // }
+          coins_got++;
+          console.log("got a coin. you have this many coins: " + coins_got);
+
+          if(cops_active < cops_max) {
+            cops[cops_active].alpha = 1;
+            jail.anims.play('alarm_jail', true);
+            cops_active++;
+          }
+          // cops[coins_got-1].active = true;
+          jail.anims.play('alarm_jail', true);
+          console.log("cop number "+ (coins_got-1) + " is active!");
+
+          
+          
+          for(var i = 0; i < coins.length; i++){
+            coins[i].alpha = 0;
+            // if(coins.length > 1) {
+            //   var coin_width = coins[i].width;
+            //   if(i == 0) {
+            //     // coins[i].x = car.x - coin_width/coins.length - coin_width/2;
+            //     coins[i].x = car.x - coin_width/2*coins.length;
+            //     console.log("first coin is x = " + coins[i].x);
+            //   }
+            //   else if(i > 0) {
+            //     coins[i].x = coins[i-1].x + coin_width/2 + coin_width + 5;
+
+            //   } 
+            // }
+          }
+
+          console.log("robbing bank");
+        }
+      }
+    }
+    if(player_text_lag > 0 && !title.screen) {
+      
+      player_text_lag--;
+    }
+    if(player_text_lag == 0) {
+      player_text.alpha = 0;
+      player_arrow.alpha = 0;
+      exit.alpha = 1;
+    }
+    if(intro_lag > 0 && !title.screen){
+      intro_lag--;
+      // console.log(car.lag);
+      car.x += car_speed * (8/6);
+      player_text.x += car_speed * (8/6);
+      player_arrow.x += car_speed * (8/6);
+      if(intro_lag == 0){
+        console.log("no more intro lag")
+        
+        
+        car.moving = "stop";
+        // car.anims.play('down', true);
+        
+        // car.x = points[car.y_coord][car.x_coord].x;
+      }
+    }
+    //car move
+    if(car.moving == "up"){
+      car.y -= car_speed;
+      // for(var i = 0; i < coins.length; i++){
+      //   coins[i].y -= car_speed;
+      // }
+      car_coin.y -= car_speed;
+      car_coin_text.y -= car_speed;
+      player_text.y -= car_speed;
+      player_arrow.y -= car_speed;
+    } else if(car.moving == "down"){
+      car.y += car_speed;
+      // for(var i = 0; i < coins.length; i++){
+      //   coins[i].y += car_speed;
+      // }
+      car_coin.y += car_speed;
+      car_coin_text.y += car_speed;
+      player_text.y += car_speed;
+      player_arrow.y += car_speed;
+    } else if(car.moving == "left"){
+      car.x -= car_speed * (8/6);
+      // for(var i = 0; i < coins.length; i++){
+      //   coins[i].x -= car_speed * (8/6);
+      // }
+      car_coin.x -= car_speed * (8/6);
+      car_coin_text.x -= car_speed * (8/6);
+      player_text.x -= car_speed * (8/6);
+      player_arrow.x -= car_speed * (8/6);
+    } else if(car.moving == "right"){
+      car.x += car_speed * (8/6);
+      // for(var i = 0; i < coins.length; i++){
+      //   coins[i].x += car_speed * (8/6);
+      // }
+      car_coin.x += car_speed * (8/6);
+      car_coin_text.x += car_speed * (8/6);
+      player_text.x += car_speed * (8/6);
+      player_arrow.x += car_speed * (8/6);
+    }
+
+    // coppers
+    for(var i = 0; i < cops.length; i++) {
+      var cop = cops[i];
+      if(cop.alpha == 0){
+        // console.log("cop number " + i + " is inactive");
+        break;
+      }
+
+      // move cop
+      if(cop.lag > 0){
+        cop.lag--;
+        if(cop.lag == 0) {
+          cop.moving = "stop";
+          cop.active = true;
+          cop.alpha = 1;
+          cop.lag = 10;
+          cop.x = points[cop.y_coord][cop.x_coord].x;
+          cop.y = points[cop.y_coord][cop.x_coord].y;
+
+          var rand = Phaser.Math.Between(0, 3);
+          // console.log("cop car is moving!");
+          if(rand == 0) {
+            moveCar(cop, "up");
+          } else if(rand == 1) {
+            moveCar(cop, "right");
+          } else if(rand == 2) {
+            moveCar(cop, "down");
+          } else if(rand == 3) {
+            moveCar(cop, "left");
+          }
+        }
+      } 
+      if(cop.moving == "up"){
+        cop.y -= car_speed;
+      } else if(cop.moving == "down"){
+        cop.y += car_speed;
+      } else if(cop.moving == "left"){
+        cop.x -= car_speed * (8/6);
+      } else if(cop.moving == "right"){
+        cop.x += car_speed * (8/6);
+      }
+
+      //check collision with player car
+      if (cop.active && car.x > (cop.x-cop.width/2) && car.x < (cop.x+cop.width/2) && car.y > (cop.y-cop.height/2) && car.y < (cop.y+cop.height/2)) {
+        if(!game_over) {
+          gameOver(this);
+        }
+
+      }
+    }
+    
+
+    // price fluctuations
+    if(!title.screen && !game_over){
+      time++;
+    }
+
+    if(time % print_freq == 0 && coins_got > 0) {
+      
+      //increment or decrement value
+      if(!title.screen && !game_over) {
+        price.x++;
+        price.scale = graph_height / price.peak;
+        //fluctuate
+        var prev_rate = price.growth_rate;
+        var prev_value = price.value;
+
+        price.growth_rate = fluctuateGrowth(price.growth_rate);
+        var base = 1.01
+
+        if(price_direction == 1 && (time % time_to_drop == 0)) {
+          console.log("price should drop ");
+          price_arrow.play('price_down');
+          theme.volume = 0;
+          theme2.volume = .5;
+          price_direction = -1;
+          if(cops_active < cops_max) {
+            cops[cops_active].alpha = 1;
+            jail.anims.play('alarm_jail', true);
+            cops_active++;
+          }
+        } else if (price_direction == -1 && (time % time_to_rise == 0)){
+          console.log("price mooning");
+          price_arrow.play('price_up');
+          theme.volume = .5;
+          theme2.volume = 0;
+          price_direction = 1;
+        }
+      
+
+        if(price_direction == 1) {
+          price.value = 1.005 * price.value * price_direction * Math.pow(base, (2*price.growth_rate-1));
+        } else {
+          price.value = price.value * .994;
+        }
+      }
+
+      var point;
+      price.y = this.cameras.main.height - price.value * price.scale; 
+    
+      if(price.value - prev_value > 0) {
+        point = this.add.image(price.x, price.y, 'green');
+        point.value = price.value;
+        graph_points.push(point);
+        
+      } else if(price.value - prev_value < 0){
+        point = this.add.image(price.x, price.y, 'red');
+        point.value = price.value;
+        graph_points.push(point);
+      }
+
+      if(time % 30 == 0){
+        price.text.setText("1 Coin = $" + price.value.toFixed(2));
+      }
+
+      for (var i = 0; i < graph_points.length; i++) {
+        if(game_over){
+          break;
+        }
+
+        // horizontal scrolling
+        if(price.x >= graph_width){
+          price.x = graph_width;
+          graph_points[i].x--;
+
+          if(graph_points[i].x < gameWidth){
+            graph_points[i].destroy();
+            graph_points.shift();
+          }
+        }
+
+        // vertical scaling
+        if(price.value > price.peak){
+        // if(price.y < graph_height){
+          price.peak = price.value;
+          price.scale = graph_height / price.peak;
+        } else if (price.value < price.low ){
+          // console.log("reaching low");
+          // price.low = price.value;
+          // price.scale = graph_height * price.low;
+        }
+        graph_points[i].y = this.cameras.main.height - graph_points[i].value * price.scale;
+      }
+    }
+}
+
+
+  window.addEventListener('load', function() {
+
+    // Checking if Web3 has been injected by the browser (Mist/MetaMask)
+    if (typeof web3 !== 'undefined') {
+      // Use Mist/MetaMask's provider
+      web3js = new Web3(web3.currentProvider);
+    } else {
+      console.log('No web3? You should consider trying MetaMask!')
+      // fallback - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
+      web3js = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+    }
+
+    LeaderboardContract = web3.eth.contract([
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "getHighscore",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "value",
+          "type": "uint256"
+        }
+      ],
+      "name": "setHighscore",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }]);
+    console.log("loaded contract");
+    console.dir(LeaderboardContract);
+    Leaderboard = LeaderboardContract.at('0xa34e44001812fddfa0a856250a773066cbc4825b');
+    console.log("instantiated contract at address");
+    console.dir(Leaderboard);
+
+
+    // Now you can start your app & access web3 freely:
+    var game = new Phaser.Game(config);
+
+  })
+
+
+  </script>
+By <a href="https://plungergames.itch.io/">Plunger Games</a>:  Kris Calabio - Lead Programmer, Mark Calabio - Graphic Designer/Additional Programming, Francis Roberts - Sound Composer
+</body>
+
+</html>
