@@ -11,61 +11,6 @@
 <body>
 
   <script>
-
-  // if(typeof window.web3 !== "undefined" && typeof window.web3.currentProvider !== "undefined") {
-  //   var web3 = new Web3(web3.currentProvider);
-  //   console.log("there is a provider");
-  //   console.dir(web3);
-  // } else {
-  //   var web3 = new Web3();
-  //   console.log("there is no provider. use localhost");
-  //   web3.setProvider('ws://localhost:7545');
-  // }
-  
-  // let instance = await Leaderboard.deployed()
-  // web3.eth.defaultAccount = web3.eth.accounts[0];
-  // console.log(web3.eth.defaultAccount);
-
-  // const LeaderboardContract = web3.eth.contract([
-  // {
-  //   "constant": true,
-  //   "inputs": [],
-  //   "name": "getHighscore",
-  //   "outputs": [
-  //     {
-  //       "name": "",
-  //       "type": "uint256"
-  //     }
-  //   ],
-  //   "payable": false,
-  //   "stateMutability": "view",
-  //   "type": "function"
-  // },
-  // {
-  //   "constant": false,
-  //   "inputs": [
-  //     {
-  //       "name": "value",
-  //       "type": "uint256"
-  //     }
-  //   ],
-  //   "name": "setHighscore",
-  //   "outputs": [
-  //     {
-  //       "name": "",
-  //       "type": "bool"
-  //     }
-  //   ],
-  //   "payable": false,
-  //   "stateMutability": "nonpayable",
-  //   "type": "function"
-  // }]);
-  // console.log("loaded contract");
-  // console.dir(LeaderboardContract);
-  // const Leaderboard = LeaderboardContract.at('0xa34e44001812fddfa0a856250a773066cbc4825b');
-  // console.log("instantiated contract at address");
-  // console.dir(Leaderboard);
-
   var LeaderboardContract;
   var Leaderboard;
   var personalHighscore;
@@ -101,6 +46,10 @@ var robbery_sound;
 
 var title;
 var game_over = false;
+var leader_board = false;
+var game_over_text;
+var you_got;
+var score_text;
 var press_text;
 var gameWidth = 800;
 var car;
@@ -111,6 +60,8 @@ var player_arrow;
 var player_text_lag = 200;
 var score = 0;
 var highscore = 0;
+var first_time = false;
+var player_name;
 var score_text;
 var highscore_text;
 var coin_icon;
@@ -219,8 +170,22 @@ function noRoads (x,y) {
 
 function preload ()
 {
-    Leaderboard.getHighscore( (error,result) => {        
-                              if(!error) {                    
+    Leaderboard.getName(web3.eth.accounts[0], (error,result) => {        
+                              if(!error) {
+                                player_name = result;
+                                if(!result){
+                                  console.log("first time");
+                                  first_time = true;
+                                }
+                                console.log("Leaderboard.getName returned: " + player_name);
+                              } else {
+                                console.log("Leaderboard.getHighscore: player has no record");
+                                console.dir(error);
+                              }
+                            });
+
+    Leaderboard.getHighscore(web3.eth.accounts[0], (error,result) => {        
+                              if(!error) {
                                 personalHighscore = result.c[0];
                                 console.log("Leaderboard.getHighscore returned: " + personalHighscore);
                               } else {
@@ -299,7 +264,10 @@ function preload ()
 function showPressText(game) {
   var msg_text = "Start";
   if(game_over) {
-    msg_text = "Play Again";
+    msg_text = "see the Leaderboard";
+    if(leader_board){
+      msg_text = "play again";
+    }
   }
   press_text = game.add.text(game.cameras.main.width/2, game.cameras.main.height - 100, price.value, { fontFamily: '"Roboto Condensed"',
   fontSize: 24}).setText("Press Arrow Keys to " + msg_text).setOrigin(.5);
@@ -742,22 +710,39 @@ function resetGame (game) {
   // console.log("car.x = " + car.x);
 }
 
+function showLeaderboard(game) {
+  window.location.href = 'leaderboard.html';
+  // car.lag = lag_frames;
+  // game_over_text.alpha = 0;
+  // you_got.alpha = 0;
+  // score_text.alpha = 0;
+  // press_text.alpha = 0;
+  // leader_board = true;
+
+  // // get array of highscores and sort them into a leaderboard.
+  // // perhaps make a smart contract function getHighscores
+  // // function here getHighscores will call that and do the sorting.
+  // // maybe getHighscores should be called on gameOver
+  // var sorted_highscores = new Array();
+  // sorted_highscores[0] = {"name":"Kris", "score":10000};
+  // sorted_highscores[1] = {"name":"Krist", "score":1000};
+  // sorted_highscores[2] = {"name":"Kriss", "score":100};
+  // var highscores_string = "1. " + sorted_highscores[0].name + " $" + sorted_highscores[0].score + 
+  //                       "\n2. " + sorted_highscores[1].name + " $" + sorted_highscores[1].score + 
+  //                       "\n3. " + sorted_highscores[2].name + " $" + sorted_highscores[2].score;
+
+  // var highscores_text = game.add.text(30, 100, highscores_string, { fontFamily: '"Roboto Condensed"',
+  // fontSize: 44}).depth = 2000;
+
+
+}
+
 function gameOver(game) {
   console.log("game over");
   theme.stop();
   theme2.stop();
   game_over_sound.play();
-  if(highscore > personalHighscore) {
-    Leaderboard.setHighscore( highscore,
-        (error,result) => {
-          if(!error) {
-            console.log("success recording score: " + result);
-          } else {
-            console.log("error recording score");
-          }
-        });
-  }
-
+  
   // theme.play();
 
   var x_offset = - 64;
@@ -772,17 +757,31 @@ function gameOver(game) {
   }
 
   game_over = true;
-  car.lag = lag_frames;
-  var game_over_text = game.add.text(game.cameras.main.width/2, game.cameras.main.height/2 -50, price.value, { fontFamily: '"Roboto Condensed"',
+  car.lag = lag_frames*3;
+  game_over_text = game.add.text(game.cameras.main.width/2, game.cameras.main.height/2 -50, price.value, { fontFamily: '"Roboto Condensed"',
   fontSize: 44}).setText("GAME OVER").setOrigin(.5);
   game_over_text.depth = 100;
-  var you_got = game.add.text(game.cameras.main.width/2, game_over_text.y + 50, price.value, { fontFamily: '"Roboto Condensed"',
+  you_got = game.add.text(game.cameras.main.width/2, game_over_text.y + 50, price.value, { fontFamily: '"Roboto Condensed"',
   fontSize: 24}).setText("You got").setOrigin(.5);
   you_got.depth = 100;
-  var score_text = game.add.text(game.cameras.main.width/2, you_got.y + 50, price.value, { fontFamily: '"Roboto Condensed"',
+  score_text = game.add.text(game.cameras.main.width/2, you_got.y + 50, price.value, { fontFamily: '"Roboto Condensed"',
   fontSize: 24}).setText("$" + score.toFixed(2)).setOrigin(.5);
   score_text.depth = 100;
-  
+
+  if(highscore > personalHighscore) {
+    if(first_time) {
+      player_name = prompt("Game over. Which name would you like displayed on the Leaderboard?");
+    }
+    console.log("Creating record for " + player_name);
+    Leaderboard.setHighscore( player_name, Math.ceil(highscore),
+        (error,result) => {
+          if(!error) {
+            console.log("success recording score: " + result);
+          } else {
+            console.log("error recording score");
+          }
+        });
+  }
 }
 
 function create ()
@@ -1032,8 +1031,12 @@ function update ()
       if (cursors.left.isDown) {
 
         if(game_over) {
-          console.log("reloading");
-          location.reload();
+          if (leader_board){
+            console.log("reloading game");
+            location.reload();
+          }
+          console.log("loading leaderboard screen");
+          showLeaderboard(this); 
         } else if(title.screen) {
           console.log("starting game");
           resetGame(this);
@@ -1048,8 +1051,12 @@ function update ()
         
       } else if (cursors.right.isDown) {
         if(game_over) {
-          console.log("reloading");
-          location.reload();
+          if (leader_board){
+            console.log("reloading game");
+            location.reload();
+          }
+          console.log("loading leaderboard screen");
+          showLeaderboard(this);
         } else if(title.screen) {
           console.log("starting game");
           resetGame(this);
@@ -1063,8 +1070,12 @@ function update ()
         // console.log("car x,y = " + car.x_coord + "," + car.y_coord);
       } else if (cursors.down.isDown) {
         if(game_over) {
-          console.log("reloading");
-          location.reload();
+          if (leader_board){
+            console.log("reloading game");
+            location.reload(this);
+          }
+          console.log("loading leaderboard screen");
+          showLeaderboard();
         } else if(title.screen) {
           console.log("starting game");
           resetGame(this);
@@ -1078,8 +1089,12 @@ function update ()
         // console.log("car x,y = " + car.x_coord + "," + car.y_coord);
       } else if (cursors.up.isDown) {
         if(game_over) {
-          console.log("reloading");
-          location.reload();
+          if (leader_board){
+            console.log("reloading game");
+            location.reload();
+          }
+          console.log("loading leaderboard screen");
+          showLeaderboard(this);
         } else if(title.screen) {
           console.log("starting game");
           resetGame(this);
@@ -1452,42 +1467,104 @@ function update ()
     }
 
     LeaderboardContract = web3.eth.contract([
-    {
-      "constant": true,
-      "inputs": [],
-      "name": "getHighscore",
-      "outputs": [
-        {
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "payable": false,
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "constant": false,
-      "inputs": [
-        {
-          "name": "value",
-          "type": "uint256"
-        }
-      ],
-      "name": "setHighscore",
-      "outputs": [
-        {
-          "name": "",
-          "type": "bool"
-        }
-      ],
-      "payable": false,
-      "stateMutability": "nonpayable",
-      "type": "function"
-    }]);
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "name": "score",
+        "type": "uint256"
+      }
+    ],
+    "name": "setHighscore",
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "addresses",
+    "outputs": [
+      {
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "a",
+        "type": "address"
+      }
+    ],
+    "name": "getHighscore",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "a",
+        "type": "address"
+      }
+    ],
+    "name": "getName",
+    "outputs": [
+      {
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "totalPlayers",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  }
+]);
     console.log("loaded contract");
     console.dir(LeaderboardContract);
-    Leaderboard = LeaderboardContract.at('0xa34e44001812fddfa0a856250a773066cbc4825b');
+    Leaderboard = LeaderboardContract.at('0xbd89ff884d09df7e7c30df78807a15fd2d5170ea');
     console.log("instantiated contract at address");
     console.dir(Leaderboard);
 
