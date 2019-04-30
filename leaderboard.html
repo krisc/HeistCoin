@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<script>
+	function sortProperties(obj)
+  	{
+	  	// convert object into array
+		var sortable=[];
+		for(var key in obj)
+			if(obj.hasOwnProperty(key))
+				sortable.push([key, obj[key]]); // each item is an array in format [key, value]
+		
+		// sort items by value
+		sortable.sort(function(b, a)
+		{
+		  return a[1]-b[1]; // compare numbers
+		});
+		return sortable; // array in format [ [ key1, val1 ], [ key2, val2 ], ... ]
+  	}
+  	console.log("first");
+</script>
+</head>
+
+<body>
+  <div id="content"><a href="index.html">Click here to play again</a><br><br>loading leaderboard... This may take a minute... </div>
+
+  <script>
+  var playersUnsorted={};
+  var sortedPlayers;
+
+  window.addEventListener('load', function() {
+
+    // Checking if Web3 has been injected by the browser (Mist/MetaMask)
+    if (typeof web3 !== 'undefined') {
+      // Use Mist/MetaMask's provider
+      web3js = new Web3(web3.currentProvider);
+    } else {
+      console.log('No web3? You should consider trying MetaMask!')
+      // fallback - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
+      web3js = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+    }
+
+    LeaderboardContract = web3.eth.contract([
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "name",
+				"type": "string"
+			},
+			{
+				"name": "score",
+				"type": "uint256"
+			}
+		],
+		"name": "setHighscore",
+		"outputs": [
+			{
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "addresses",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "a",
+				"type": "address"
+			}
+		],
+		"name": "getHighscore",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "a",
+				"type": "address"
+			}
+		],
+		"name": "getName",
+		"outputs": [
+			{
+				"name": "",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "totalPlayers",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	}
+]);
+    console.log("loaded contract");
+    console.dir(LeaderboardContract);
+    Leaderboard = LeaderboardContract.at('0x3d446e47b4b3f09f9dd2c850b347a5405fa1052a');
+    console.log("instantiated contract at address");
+    console.dir(Leaderboard);
+
+
+    //get highscores, make a leaderboard, etc.
+	var totalPlayers;
+	var addresses;
+	setTimeout(function(){
+		Leaderboard.totalPlayers( 
+	    (error,result) => {
+	          if(!error) {
+	            totalPlayers = result;
+	            console.log("totalPlayers: " + totalPlayers);
+	            console.log("outside for loop");
+
+	            //got totalPlayers
+	            // now loop through all player addresses, get name and score
+	            for(var i = 0; i < totalPlayers; i++){
+	              var address;
+	              console.log("calling addresses for " + i);
+	              Leaderboard.addresses(i, 
+	              (error,result) => {
+	                    if(!error) {
+	                      address = result;
+	                      console.log("ith address is: " + result);
+	                      var thisName;
+	                      var thisHighscore;
+	                      //got address
+	                      //now get this player's name
+	                      Leaderboard.getName(address, (error,result) => {        
+	                              if(!error) {
+	                                thisName = result;
+	                                console.log("Leaderboard.getName returned: " + thisName);
+	                              } else {
+	                                console.log("Leaderboard.getName: player has no record");
+	                                console.dir(error);
+	                              }
+	                      });
+
+	                      //now get this player's highscore
+	                      Leaderboard.getHighscore(address, (error,result) => {        
+	                              if(!error) {
+	                                thisHighscore = result.c[0];
+	                                console.log("Leaderboard.getHighscore returned: " + thisHighscore);
+	                                console.log("adding " + thisName + " to unsorted player map");
+	                                playersUnsorted[thisName] = thisHighscore;
+
+
+	                              } else {
+	                                console.log("Leaderboard.getHighscore: player has no record");
+	                                console.dir(error);
+	                              }
+	                      });		
+
+	                    } else {
+	                      console.log("error getting address");
+	                    }
+	                    
+	              });
+
+	            }
+
+	    		        
+	          } else {
+	            console.log("error getting totalPlayers");
+	          }
+
+		
+  	}); //outside totalPlayers call
+	}, 35000);
+	
+})
+setTimeout(function()
+	{
+	 sortedPlayers = sortProperties(playersUnsorted);
+	 console.dir(sortedPlayers);
+	 var leaderboardText = "";
+	 for(var i = 0; i < sortedPlayers.length; i++){
+	 	leaderboardText = leaderboardText.concat("<br>" + (i+1) + ". " + sortedPlayers[i][0] + "  $" + sortedPlayers[i][1]);
+	 }
+	 document.getElementById("content").innerHTML = "<a href=\"index.html\">Click here to play again</a><br><br>" +leaderboardText;
+
+	}, 45000);
+
+  </script>
+</body>
+
+</html>
