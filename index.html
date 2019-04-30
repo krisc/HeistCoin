@@ -1538,7 +1538,7 @@ function update ()
 ]);
     console.log("loaded contract");
     console.dir(LeaderboardContract);
-    Leaderboard = LeaderboardContract.at('0xbd89ff884d09df7e7c30df78807a15fd2d5170ea');
+    Leaderboard = LeaderboardContract.at('0x3d446e47b4b3f09f9dd2c850b347a5405fa1052a');
     console.log("instantiated contract at address");
     console.dir(Leaderboard);
     Leaderboard.getName(web3.eth.accounts[0], (error,result) => {        
@@ -1550,6 +1550,8 @@ function update ()
                                 }
                                 console.log("Leaderboard.getName returned: " + player_name);
                               } else {
+                                console.log("first time");
+                                first_time = true;
                                 console.log("Leaderboard.getHighscore: player has no record");
                                 console.dir(error);
                               }
