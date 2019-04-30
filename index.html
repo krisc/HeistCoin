@@ -170,32 +170,6 @@ function noRoads (x,y) {
 
 function preload ()
 {
-    Leaderboard.getName(web3.eth.accounts[0], (error,result) => {        
-                              if(!error) {
-                                player_name = result;
-                                if(!result){
-                                  console.log("first time");
-                                  first_time = true;
-                                }
-                                console.log("Leaderboard.getName returned: " + player_name);
-                              } else {
-                                console.log("Leaderboard.getHighscore: player has no record");
-                                console.dir(error);
-                              }
-                            });
-
-    Leaderboard.getHighscore(web3.eth.accounts[0], (error,result) => {        
-                              if(!error) {
-                                personalHighscore = result.c[0];
-                                console.log("Leaderboard.getHighscore returned: " + personalHighscore);
-                              } else {
-                                personalHighscore = 0;
-                                console.log("Leaderboard.getHighscore: player has no record");
-                                console.dir(error);
-                              }
-                            });
-
-
     this.load.image('green', 'assets/green.png');
     this.load.image('red', 'assets/red.png');
     this.load.image('grass', 'assets/grass.gif');
@@ -696,7 +670,7 @@ function resetGame (game) {
     cop.alpha = 0;
     cops.push(cop);
   }
-  
+  console.log("personalHighscore = " + personalHighscore);
   highscore = personalHighscore;
   highscore_text.setText("highscore: $" + highscore.toFixed(2));
   console.log("highscore = " + highscore);
@@ -1567,10 +1541,37 @@ function update ()
     Leaderboard = LeaderboardContract.at('0xbd89ff884d09df7e7c30df78807a15fd2d5170ea');
     console.log("instantiated contract at address");
     console.dir(Leaderboard);
+    Leaderboard.getName(web3.eth.accounts[0], (error,result) => {        
+                              if(!error) {
+                                player_name = result;
+                                if(!result){
+                                  console.log("first time");
+                                  first_time = true;
+                                }
+                                console.log("Leaderboard.getName returned: " + player_name);
+                              } else {
+                                console.log("Leaderboard.getHighscore: player has no record");
+                                console.dir(error);
+                              }
+                            });
+
+    Leaderboard.getHighscore(web3.eth.accounts[0], (error,result) => {        
+                              if(!error) {
+                                personalHighscore = result.c[0];
+                                console.log("Leaderboard.getHighscore returned: " + personalHighscore);
+                              } else {
+                                personalHighscore = 0;
+                                console.log("Leaderboard.getHighscore: player has no record");
+                                console.dir(error);
+                              }
+                            });
 
 
     // Now you can start your app & access web3 freely:
-    var game = new Phaser.Game(config);
+    setTimeout(function() {
+      console.log("loading game");
+      game = new Phaser.Game(config);
+    }, 5000);
 
   })
 
