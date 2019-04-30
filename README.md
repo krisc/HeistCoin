@@ -14,6 +14,9 @@ Here are some tips:
 - You can just leave a town whenever you want. If you see that an exchange or banks are unreachable, just leave town and go to the next.
 
 
+Known issues:
+- The leaderboard screen is somewhat finnicky. Sometimes player names are listed as 'undefined'. This may depend on confirmation times of transactions being variable and also the retrieval time of data from the blockchain being variable. You can refresh the page and go to the leaderboard again if you didn't see your score the first time.
+
 Kris Calabio - Lead Programmer
 
 Mark Calabio - Graphic Designer/Additional Programming
