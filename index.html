@@ -170,78 +170,173 @@ function noRoads (x,y) {
 
 function preload ()
 {
-    this.load.image('green', 'assets/green.png');
-    this.load.image('red', 'assets/red.png');
-    this.load.image('grass', 'assets/grass.gif');
-    this.load.image('black', 'assets/blackbox.gif');
-    this.load.image('point', 'assets/map_point.gif');
-    this.load.image('road_x', 'assets/road_x.gif');
-    this.load.image('road_y', 'assets/road_y.gif');
+    // this.load.image('green', './green.png');
+    this.textures.addBase64('green', "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIW2Ng+M/wHwAEAQH/7yMK/gAAAABJRU5ErkJggg==");
+    // this.load.image('red', './red.png');
+    this.textures.addBase64('red', "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIW2P4z8DwHwAFAAH/F1FwBgAAAABJRU5ErkJggg==");
+    // this.load.image('grass', './grass.gif');
+    this.textures.addBase64('grass', "data:image/gif;base64,R0lGODlhEAAQAKEDAApoABGwABj/AHAAACwAAAAAEAAQAAACG5SPqRbaC9l5gtKIs0zv6h91WwWW5ulMW+N9BQA7");
+    // this.load.image('black', './blackbox.gif');
+    this.textures.addBase64('black', "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH+EUNyZWF0ZWQgd2l0aCBHSU1QACwAAAAAAQABAAACAkQBADs=");
+    // this.load.image('point', './map_point.gif');
+    this.textures.addBase64('point', "data:image/gif;base64,R0lGODlhCgAKAMIEAJFxJMueM//IRf/rvP///////////////yH+EUNyZWF0ZWQgd2l0aCBHSU1QACH5BAEKAAQALAAAAAAKAAoAAAMfSAoM+iDI4FYQeFASAc5U92EhNQplNG6dullTBTVPAgA7");
+    // this.load.image('road_x', './road_x.gif');
+    this.textures.addBase64('road_x', "data:image/gif;base64,R0lGODlhBAAEAKEBAJ+fn////////////yH+EUNyZWF0ZWQgd2l0aCBHSU1QACH5BAEKAAIALAAAAAAEAAQAAAIFhH8RCAUAOw==");
+    // this.load.image('road_y', './road_y.gif');
+    this.textures.addBase64('road_y', "data:image/gif;base64,R0lGODlhBAAEAKEBAJ+fn////////////yH+EUNyZWF0ZWQgd2l0aCBHSU1QACH5BAEKAAIALAAAAAAEAAQAAAIEhB94VgA7");
+
+    this.textures.addBase64('jail', "data:image/gif;base64,R0lGODlhFAAaAOMKAAAAAIgAAP8AADs7Oy5NZkBXaFdXV2NjY4WFhby8vP///////////////////////yH+EUNyZWF0ZWQgd2l0aCBHSU1QACH5BAEKAA8ALAAAAAAUABoAAASE8Mkpgw00azy53pT3TUBpltpwrMfpAuwxzEZt37hB63Pv/wNbbEhk1Q4FQgGpPBCaScLqKK0mndfm1OBkVZ1QLbX7lbKuh2Nyue6u2mlucb5tIRKAex6v18ftfIF7g3+DfYJ+R4aIgoWHi4SKj5N4joyQlpCPmZSRQZqXOjp0RUFAp6cRADs=");
+
+
     var rand = Phaser.Math.Between(0, COLORS.length-1);
     car_color = COLORS[rand];
-    this.load.spritesheet('car_' + car_color, 
-      'assets/car_spritesheet_' + car_color + '.gif',
-      { frameWidth: 16, frameHeight: 48/3 }
-    );
-    this.load.spritesheet('arrow', 'assets/arrow_spritesheet.gif',
-      { frameWidth: 12, frameHeight: 6 }
-    );
-    this.load.spritesheet('price_arrow', 'assets/arrows_spritesheeet.gif',
-      { frameWidth: 16, frameHeight: 32 }
-    );
+    car_color = 'magenta';
+
+    // this.load.spritesheet('car_' + car_color, 
+    //   './car_spritesheet_' + car_color + '.gif',
+    //   { frameWidth: 16, frameHeight: 48/3 }
+    // );
+
+    var carImg = new Image();
+    carImg.onload = () => {
+        this.textures.addSpriteSheet('car_magenta', carImg, { frameWidth: 16, frameHeight: 48/3 });
+    };
+    carImg.src = "data:image/gif;base64,R0lGODlhEAAwAOMHAAAAANhOnACP/9xepeBysOF1sp+fnwD//wD//wD//wD//wD//wD//wD//wD//wD//yH+EUNyZWF0ZWQgd2l0aCBHSU1QACH5BAEKAAgALAAAAAAQADAAAAS+EElEqq0z302y5JcHblolHOghWOWZoms3Ve+LzYTgwvE0VIOgMAhE/EYbIdIyXAKDhaFUGB0ECtisFhsYGAPgrjDcnZAzZw8lpMZx2ku1CWZZtV4xVammIuhxfCt/RiY6his6Pk9SBEKETk+QkZAGREQgQZVBYEcXVmKfnFJkXghgbaYBciBwSKsjInMpMTIfOYE3tnwouWu7B72FeD0SP1NNXp1Ol5CXBgDP0dAAk9PS0ZPNX2FDpGZhaOAIEQA7";
+
+    // this.load.spritesheet('arrow', './arrow_spritesheet.gif',
+    //   { frameWidth: 12, frameHeight: 6 }
+    // );
+
+    var arrowImg = new Image();
+    arrowImg.onload = () => {
+        this.textures.addSpriteSheet('arrow', arrowImg, { frameWidth: 12, frameHeight: 6 });
+    };
+    arrowImg.src = "data:image/gif;base64,R0lGODlhDAAYAKEDAFwAAIUAAP8AACr/ACH+EUNyZWF0ZWQgd2l0aCBHSU1QACH5BAEKAAMALAAAAAAMABgAAAJGRI4JA+Lv1mAwztuevDNv3n3TYSRHJ2RPsDUqC7LOCQ4sXHdBriCcWhIFIrQfUTRK7XI2pIlEM1QMm4MGhxmmkLYbkyEqAAA7";
+
+    // this.load.spritesheet('price_arrow', './arrows_spritesheeet.gif',
+    //   { frameWidth: 16, frameHeight: 32 }
+    // );
+
+    var price_arrowImg = new Image();
+    price_arrowImg.onload = () => {
+        this.textures.addSpriteSheet('price_arrow', price_arrowImg, { frameWidth: 16, frameHeight: 32 });
+    };
+    price_arrowImg.src = "data:image/gif;base64,R0lGODlhEABAAKEAAAAAAP8AACr/AAAAACH+EUNyZWF0ZWQgd2l0aCBHSU1QACH5BAEKAAMALAAAAAAQAEAAAAJ+hA8iyKja2HvRzBnvlXrbriVgx2GVaFbhuaqem2avHDctTbGzvZc5/MNBdDXfEHgULohBXtHRgz4Pt0bgij0BsNkT96r9BsJfMtfcrYjRYG/ZfYanI2t5W/3Gx/Vza57+57cHOCjYx1DHd2cg1pjlmAjZJ0kYiJDIp3WweFAAADs=";
     
-    this.load.spritesheet('exit', 'assets/exit_signs_spritesheet.gif',
-      { frameWidth: 9, frameHeight: 9 }
-    );
-    this.load.spritesheet('title', 'assets/title_spritesheet.gif',
-      { frameWidth: 102, frameHeight: 49 }
-    );
-    this.load.spritesheet('coin', 
-        'assets/coin_spritesheet.gif',
-        { frameWidth: 16, frameHeight: 16 }
-    );
-    this.load.spritesheet('cop', 
-        'assets/cop_spritesheet.gif',
-        { frameWidth: 16, frameHeight: 48/3 }
-    );
-    this.load.spritesheet('bank', 
-        'assets/building_bank_spritesheet.gif',
-        { frameWidth: 20, frameHeight: 26 }
-    );
-    this.load.spritesheet('exchange', 
-        'assets/building_exchange_spritesheet.gif',
-        { frameWidth: 20, frameHeight: 26 }
-    );
-    this.load.spritesheet('exchange_text', 
-        'assets/exchange_text_spritesheet.gif',
-        { frameWidth: 33, frameHeight: 15/3 }
-    );
-    this.load.spritesheet('player_text', 
-        'assets/player_text_spritesheet.gif',
-        { frameWidth: 23, frameHeight: 15/3 }
-    );
+    // this.load.spritesheet('exit', './exit_signs_spritesheet.gif',
+    //   { frameWidth: 9, frameHeight: 9 }
+    // );
+
+    var exitImg = new Image();
+    exitImg.onload = () => {
+        this.textures.addSpriteSheet('exit', exitImg, { frameWidth: 9, frameHeight: 9 });
+    };
+    exitImg.src = "data:image/gif;base64,R0lGODlhCQA2AIABAP8AAAAAACH+EUNyZWF0ZWQgd2l0aCBHSU1QACH5BAEKAAEALAAAAAAJADYAAAI1jB8AmLrmXIu0Tnosigy+DobiSJbmqDCcx1Vu62bYJnXpief6Dt6yb3kJLyvih3WU8ZZMZgEAOw==";
+
+    // this.load.spritesheet('title', './title_spritesheet.gif',
+    //   { frameWidth: 102, frameHeight: 49 }
+    // );
+
+    var titleImg = new Image();
+    titleImg.onload = () => {
+        this.textures.addSpriteSheet('title', titleImg, { frameWidth: 102, frameHeight: 49 });
+    };
+    titleImg.src = "data:image/gif;base64,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";
+
+    // this.load.spritesheet('coin', 
+    //     './coin_spritesheet.gif',
+    //     { frameWidth: 16, frameHeight: 16 }
+    // );
+
+    var coinImg = new Image();
+    coinImg.onload = () => {
+        this.textures.addSpriteSheet('coin', coinImg, { frameWidth: 16, frameHeight: 16 });
+    };
+    coinImg.src = "data:image/gif;base64,R0lGODlhEABAAMIEAJFxJMueM//IRf/rvBj/ABj/ABj/ABj/ACH+EUNyZWF0ZWQgd2l0aCBHSU1QACH5BAEKAAQALAAAAAAQAEAAAAPHSLrQsJCBIERoUc3Kx42bAHCC92iUFVamVjlNOojEeqXdNb4wzpM3Ukm0IsY4n90rwFSeVs7KByVFqkA+6QkU0mUgsG8GIwaPtuLJDj0eUdhgkeX6VTPfdfn8Nb5YmHwgejhwalIpcDVyFFN9bnR1TmU1fjSTDZaTNYmRmiiNZWueYZobnGZkl3ilDqOrl62lr6Gxqpm0qaFNnpu8vaNEpUunlDyhe2dpdyKgDFUvty7LzIXPctV/w3mMydsqzXHGx9TCubRfCQA7";
+
+    // this.load.spritesheet('cop', 
+    //     './cop_spritesheet.gif',
+    //     { frameWidth: 16, frameHeight: 48/3 }
+    // );
+
+    var copImg = new Image();
+    copImg.onload = () => {
+        this.textures.addSpriteSheet('cop', copImg, { frameWidth: 16, frameHeight: 48/3 });
+    };
+    copImg.src = "data:image/gif;base64,R0lGODlhEAAwAOMJAAAAAH0AAP8AADs7O1JSUlpaWgCP/5+fnwD//////////////////////////////yH+EUNyZWF0ZWQgd2l0aCBHSU1QACH5BAEKAA8ALAAAAAAQADAAAATg8Mn5hKBYphRs2NmzjWSSbQaiIgZIoevamtMWx66W3GsuJoaUbDYBlI4JwAMwGBwOx2cTQG06n1grdWvtarfgsHhMVgIIhQIBjFYrJV1KPFS50HUdwYeOHJ2AKjNANDpCgTYGLzs3LSyKPI2JElBAQZYtQROUWJwJWEtOfQlfTX0HpKFHXVVUlCOnrFQEa5yws1QPA2kDYroFAxNNdMJ0Fnd4Hj41on+GLMowjD42PAjTizzXQTFBOUa1tUmgXuRTTOXkVU4FB+zu7eZN7/OnvOfoq0tta1v7b7lW5AR8EAEAOw==";
+
+    // this.load.spritesheet('bank', 
+    //     './building_bank_spritesheet.gif',
+    //     { frameWidth: 20, frameHeight: 26 }
+    // );
+
+    var bankImg = new Image();
+    bankImg.onload = () => {
+        this.textures.addSpriteSheet('bank', bankImg, { frameWidth: 20, frameHeight: 26 });
+    };
+    bankImg.src = "data:image/gif;base64,R0lGODlhFABOAIQbACkgGCQvGzwtHzQ0NP8AAABHgEBAQFJAME9PT0FXMUhfN3laP3xRnGBgYACAgGVlZQCP/39/f4CAgP9wAJ+fn4OuY4alwLegyK2/zwD//8vLy////////////////////yH+EUNyZWF0ZWQgd2l0aCBHSU1QACwAAAAAFABOAAAF/qBEjWRpklJ6rqhIpXAsq6VGaXiu37WiVDcFTkjUCG2jorJCZCKDP6NPSjwijdifMosbSSvc7dGrK5u7t0xGo2av2/CMN+6ux70QiCa/1/P/ECRdgzaENxoidm+LinOMdHc3gH2UgIKFmDmHh4l0ZpGKGgsLB6ONaYyjpQunlXqqppaHZbCsZWS0pKa3uF21s0gzwsIRDcbHyMnHEczKzsvFDczT1NXNyAMNA9vc3drYFxcM2hfb5ecD5dnG6O0M5+/r5OLp4fXn6uvp++Lt/NvG6jH4509dwG4IEwLURoDAgIYPHUKcSCAgxYgYKQacMGEAR48dP4qccAygyWwn/rUNKJZRosuWFl9e1KhtJMibI0ui3MlNpUqWFxPSbDnAggUMRmEyfGkUqQWlODs2TZpTJcKpTxEevHo0qdatALFaXWetbFkDCNKqXctWrYG3beO6RYvgrd27eOGufYDggd+/gPvuDRAgQd8AfhErfoCYb9rFkBMoluz4cGHGhDErbuyYsefCkD/7TYs5gejQjUkDXs16dF8HDh7Alh17tm0HpG/T3n2bdIECD34HBy68eAG1o5PzVd73AVretaNDzy1dd+++xodrN458ufe/zZs/1836OvQHAgQASD/9tfT06wW03w4cPnvuzVfbl79atX717PXn32j75edYXggiAhgCADs=";
+
+    // this.load.spritesheet('exchange', 
+    //     './building_exchange_spritesheet.gif',
+    //     { frameWidth: 20, frameHeight: 26 }
+    // );
+
+    var exchangeImg = new Image();
+    exchangeImg.onload = () => {
+        this.textures.addSpriteSheet('exchange', exchangeImg, { frameWidth: 20, frameHeight: 26 });
+    };
+    exchangeImg.src = "data:image/gif;base64,R0lGODlhFAA0AIQUAFJAMHlaP5FxJIV2TQCP/6KQXsueM9GcbeCqesuzc3/H/9zGigD////IReHPnf/OWf/ZfX/9//viof/jof8AAP8AAP8AAP8AAP8AAP8AAP8AAP8AAP8AAP8AAP8AAP8AACH+EUNyZWF0ZWQgd2l0aCBHSU1QACwAAAAAFAA0AAAF/uBQjGRpkqJ4rqNaDHAsz+4oGEKRFHe+96SEoUE0FIbFI7FhHDWAiSdOJ82NhEsjkqlM6ni4xi88FjSuW222y/1CwT54kMFI0O31u55x3eP/e1cEBAmDhYSGiQRBOwmNjzqPIoB5lZR9ln6BOoqHnoqMkZGOkI6TfqSkm5QJAQEArpc6fq6wAbKfhLWxoKOpu7epO76kwMLDxAXAvi00zjQLDtLT1NXT0dHW2tLZDgvf4OHi3dIPEA8OEg7m6Ors0xIQE/MQDvL09vMT9dIT7xL+zqULiE5aPH317u3Lhy/dunMT3EGU+GCCQYUJETJc6PDfw3Yf4UWIIGFkSZImYlNGMKjypEuVBhUokCCT5syaOBXAUyeBp890PqO9REl0KMuiLWGmy2mzac6dQIH2/NlTaMupU5UOlYAAwYGuRtO17PoVQVinM8mCfSoVq1qzWNW1nfo2rty5Dt625Tau77gQADs=";
+
+    // this.load.spritesheet('exchange_text', 
+    //     './exchange_text_spritesheet.gif',
+    //     { frameWidth: 33, frameHeight: 15/3 }
+    // );
+
+    var exchange_textImg = new Image();
+    exchange_textImg.onload = () => {
+        this.textures.addSpriteSheet('exchange_text', exchange_textImg, { frameWidth: 33, frameHeight: 15/3 });
+    };
+    exchange_textImg.src = "data:image/gif;base64,R0lGODlhIQAPAKEAAHAAAP8AAP9gYHAAACH5BAEKAAMALAAAAAAhAA8AAAJtlCc4qskOowhr0GszvrvmAQCVCI4heIYpypKlCL8yHMtoTOZzyZ93ANQsKMIP8YgMuHA7HHM0JBorQI51w+E1t7Qez5AILyCN8kOisul0XtZtyZ09F6Tg8B61WqqarKMsFggoZsaHMdVxFJVXAAA7";
+
+    // this.load.spritesheet('player_text', 
+    //     './player_text_spritesheet.gif',
+    //     { frameWidth: 23, frameHeight: 15/3 }
+    // );
+
+    var player_textImg = new Image();
+    player_textImg.onload = () => {
+        this.textures.addSpriteSheet('player_text', player_textImg, { frameWidth: 23, frameHeight: 15/3 });
+    };
+    player_textImg.src = "data:image/gif;base64,R0lGODlhFwAPAMIBAHAAAP8AAP9gYDz/AP8AAP8AAP8AAP8AACH5BAEKAAMALAAAAAAXAA8AAANYKDKz3GxJ1VYY97KMu/bAEIbMKJ4AOablk6ptacomLLJjoH2dh+k/1KlVG6I4H6Rnh2EZXzHSDRKhSCLVq8ApHdZwRWn4KVJufBlmgEKtON4PShLI6emQCQA7";
+
     this.load.spritesheet('jail', 
-        'assets/building_cops_spritesheet.gif',
+        './building_cops_spritesheet.gif',
         { frameWidth: 20, frameHeight: 26 }
     );
 
-    this.load.audio('theme', 'assets/music/Heistcoin Theme Full Loopable.mp3');
-    this.load.audio('theme2', 'assets/music/Heistcoin Chase Short Loopable.mp3');
-    this.load.audio('game_over_sound', 'assets/music/Heistcoin game over 1.mp3');
-    this.load.audio('caught_sound', 'assets/sfx/caught.mp3');
-    this.load.audio('coin_get_sound', 'assets/sfx/coin_get.mp3');
-    this.load.audio('exchange_sound', 'assets/sfx/exchange.mp3');
-    this.load.audio('robbery_sound', 'assets/sfx/robbery.mp3');
-    this.load.audio('heistCoin', 'assets/sfx/Heistcoin!.mp3');
+    // var jailImg = new Image();
+    // jailImg.onload = () => {
+    //     this.textures.addSpriteSheet('jail', jailImg, { frameWidth: 20, frameHeight: 26 });
+    // };
+    // jailImg.src = "data:image/gif;base64,R0lGODlhFABoAOMKAAAAAIgAAP8AADs7Oy5NZkBXaFdXV2NjY4WFhby8vBj/ABj/ABj/ABj/ABj/ABj/ACH+EUNyZWF0ZWQgd2l0aCBHSU1QACH5BAEKAA8ALAAAAAAUAGgAAAT+8Mkpgw00azy53pT3TUBpltpwrMfpAuwxzEZt37hB63Pv/wNbbEhk1Q4FQgGpPBCaScLqKK0mndfm1OBkVZ1QLbX7lbKuh2Nyue6u2mlucb5tIRKAex6v18ftfIF7g3+DfYJ+R4aIgoWHi4SKj5N4joyQlpCPmZSRQZqXOjp0RUFAp6cTAiEXIxKrD6sBArAiGbCytBWusRIvKBkqLL8mMT05yDY7qKhCpEVqYUtPbE91ZVnZRlxmZGDVS39l3mdm0eBuTOFHz0SSl5vvoJFc8/H1nfeA9pXy+f344DXyJxAGwXlpPv0bJEpYuxWmmEnUIKsVLFeyYmW8+GHjRl6kD4iliEGshLEdyXIsk/jD2cNt6mJSY2KOG5lsVmB2KyPtmrcv5eq0adMNDruXdfjR27eQU0GnCA92gjpV6iWqV61iEqVUT0OkMniwTPXhggiOIDRiwOWKA621r0aI7CXBYYuSJ4OkVKl3rA+XSM/JDFPzJ04sOr2Q6SnuZzomQnsWFSMHrFZ9XQEyfXp5YEClWLd+btp5aWaDCgt6NQU2ot8fEQAAOw==";
+
+    // this.load.audio('theme', './Heistcoin Theme Full Loopable.mp3');
+    // this.load.audio('theme2', './Heistcoin Chase Short Loopable.mp3');
+    // this.load.audio('game_over_sound', './Heistcoin game over 1.mp3');
+    // this.load.audio('caught_sound', './caught.mp3');
+    // this.load.audio('coin_get_sound', './coin_get.mp3');
+    // this.load.audio('exchange_sound', './exchange.mp3');
+    // this.load.audio('robbery_sound', './robbery.mp3');
+    // this.load.audio('heistCoin', './Heistcoin!.mp3');
 }
 
 function showPressText(game) {
   var msg_text = "Start";
   if(game_over) {
-    msg_text = "see the Leaderboard";
-    if(leader_board){
+    // msg_text = "see the Leaderboard";
+    // if(leader_board){
       msg_text = "play again";
-    }
+    // }
   }
   press_text = game.add.text(game.cameras.main.width/2, game.cameras.main.height - 100, price.value, { fontFamily: '"Roboto Condensed"',
   fontSize: 24}).setText("Press Arrow Keys to " + msg_text).setOrigin(.5);
@@ -252,8 +347,8 @@ function showPressText(game) {
 
 function resetGame (game) {
   town_num++;
-  theme.volume = .5;
-  theme2.volume = 0;
+  // theme.volume = .5;
+  // theme2.volume = 0;
   //draw grass 16x16
   var x_offset = - 64;
   var y_offset = 0;
@@ -564,18 +659,18 @@ function resetGame (game) {
 
   points[jail_y][jail_x].hasBuilding = "jail";
   jail = game.add.sprite(points[jail_y][jail_x].x, points[jail_y][jail_x].y, 'jail');
-  game.anims.create({
-    key: 'idle_jail',
-    frames: game.anims.generateFrameNumbers('jail', { start: 0, end: 0 }),
-  });
-  game.anims.create({
-    key: 'alarm_jail',
-    frames: game.anims.generateFrameNumbers('jail', { start: 0, end: 4 }),
-    frameRate: 7,
-    repeat: 2,
-    yoyo: true
-  });
-  jail.anims.play('idle_jail', true);
+  // game.anims.create({
+  //   key: 'idle_jail',
+  //   frames: game.anims.generateFrameNumbers('jail', { start: 0, end: 0 }),
+  // });
+  // game.anims.create({
+  //   key: 'alarm_jail',
+  //   frames: game.anims.generateFrameNumbers('jail', { start: 0, end: 4 }),
+  //   frameRate: 7,
+  //   repeat: 2,
+  //   yoyo: true
+  // });
+  // jail.anims.play('idle_jail', true);
   jail.setScale(3);
   building_images.push(jail);
   console.log("jail created at " + jail_x + ", " + jail_y);
@@ -670,10 +765,10 @@ function resetGame (game) {
     cop.alpha = 0;
     cops.push(cop);
   }
-  console.log("personalHighscore = " + personalHighscore);
-  highscore = personalHighscore;
-  highscore_text.setText("highscore: $" + highscore.toFixed(2));
-  console.log("highscore = " + highscore);
+  // console.log("personalHighscore = " + personalHighscore);
+  highscore = 0;
+  // highscore_text.setText("highscore: $" + highscore.toFixed(2));
+  // console.log("highscore = " + highscore);
   score_text.depth = 1;
   highscore_text.depth = 1;
   price.text.depth = 1;
@@ -713,9 +808,9 @@ function showLeaderboard(game) {
 
 function gameOver(game) {
   console.log("game over");
-  theme.stop();
-  theme2.stop();
-  game_over_sound.play();
+  // theme.stop();
+  // theme2.stop();
+  // game_over_sound.play();
   
   // theme.play();
 
@@ -761,87 +856,87 @@ function gameOver(game) {
 function create ()
 {
   //audio
-  theme = this.sound.add('theme',{
-    mute: false,
-    volume: .5,
-    rate: 1,
-    detune: 0,
-    seek: 0,
-    loop: true,
-    delay: 0
-  });
-  heistCoin = this.sound.add('heistCoin',{
-    mute: false,
-    volume: 1,
-    rate: 1,
-    detune: 0,
-    seek: 0,
-    loop: false,
-    delay: 0
-  });
+  // theme = this.sound.add('theme',{
+  //   mute: false,
+  //   volume: .5,
+  //   rate: 1,
+  //   detune: 0,
+  //   seek: 0,
+  //   loop: true,
+  //   delay: 0
+  // });
+  // heistCoin = this.sound.add('heistCoin',{
+  //   mute: false,
+  //   volume: 1,
+  //   rate: 1,
+  //   detune: 0,
+  //   seek: 0,
+  //   loop: false,
+  //   delay: 0
+  // });
 
   
-  game_over_sound  = this.sound.add('game_over_sound',{
-    mute: false,
-    volume: 1,
-    rate: 1,
-    detune: 0,
-    seek: 0,
-    loop: false,
-    delay: 0
-  });
-  theme2 = this.sound.add('theme2',{
-    mute: false,
-    volume: .5,
-    rate: 1,
-    detune: 0,
-    seek: 0,
-    loop: true,
-    delay: 0
-  });
-  caught_sound = this.sound.add('caught_sound',{
-    mute: false,
-    volume: 1,
-    rate: 1,
-    detune: 0,
-    seek: 0,
-    loop: false,
-    delay: 0
-  });
-  coin_get_sound = this.sound.add('coin_get_sound',{
-    mute: false,
-    volume: 1,
-    rate: 1,
-    detune: 0,
-    seek: 0,
-    loop: false,
-    delay: 0
-  });
-  exchange_sound = this.sound.add('exchange_sound',{
-    mute: false,
-    volume: 1,
-    rate: 1,
-    detune: 0,
-    seek: 0,
-    loop: false,
-    delay: 0
-  });
-  robbery_sound = this.sound.add('robbery_sound',{
-    mute: false,
-    volume: 1,
-    rate: 1,
-    detune: 0,
-    seek: 0,
-    loop: false,
-    delay: 0
-  });
+  // game_over_sound  = this.sound.add('game_over_sound',{
+  //   mute: false,
+  //   volume: 1,
+  //   rate: 1,
+  //   detune: 0,
+  //   seek: 0,
+  //   loop: false,
+  //   delay: 0
+  // });
+  // theme2 = this.sound.add('theme2',{
+  //   mute: false,
+  //   volume: .5,
+  //   rate: 1,
+  //   detune: 0,
+  //   seek: 0,
+  //   loop: true,
+  //   delay: 0
+  // });
+  // caught_sound = this.sound.add('caught_sound',{
+  //   mute: false,
+  //   volume: 1,
+  //   rate: 1,
+  //   detune: 0,
+  //   seek: 0,
+  //   loop: false,
+  //   delay: 0
+  // });
+  // coin_get_sound = this.sound.add('coin_get_sound',{
+  //   mute: false,
+  //   volume: 1,
+  //   rate: 1,
+  //   detune: 0,
+  //   seek: 0,
+  //   loop: false,
+  //   delay: 0
+  // });
+  // exchange_sound = this.sound.add('exchange_sound',{
+  //   mute: false,
+  //   volume: 1,
+  //   rate: 1,
+  //   detune: 0,
+  //   seek: 0,
+  //   loop: false,
+  //   delay: 0
+  // });
+  // robbery_sound = this.sound.add('robbery_sound',{
+  //   mute: false,
+  //   volume: 1,
+  //   rate: 1,
+  //   detune: 0,
+  //   seek: 0,
+  //   loop: false,
+  //   delay: 0
+  // });
 
-    if(sound_on) {
-      theme.play();
-      heistCoin.play();
-      theme2.play();
-      theme2.volume = 0;
-    }
+  //   if(sound_on) {
+  //     theme.play();
+  //     heistCoin.play();
+  //     theme2.play();
+  //     theme2.volume = 0;
+  //   }
     // this.cameras.main.setBackgroundColor('rgba(255, 255, 255, 1)');
     cursors = this.input.keyboard.createCursorKeys();
 
@@ -1005,12 +1100,12 @@ function update ()
       if (cursors.left.isDown) {
 
         if(game_over) {
-          if (leader_board){
-            console.log("reloading game");
+          // if (leader_board){
+            // console.log("reloading game");
             location.reload();
-          }
-          console.log("loading leaderboard screen");
-          showLeaderboard(this); 
+          // }
+          // console.log("loading leaderboard screen");
+          // showLeaderboard(this); 
         } else if(title.screen) {
           console.log("starting game");
           resetGame(this);
@@ -1025,12 +1120,12 @@ function update ()
         
       } else if (cursors.right.isDown) {
         if(game_over) {
-          if (leader_board){
+          // if (leader_board){
             console.log("reloading game");
             location.reload();
-          }
-          console.log("loading leaderboard screen");
-          showLeaderboard(this);
+          // }
+          // console.log("loading leaderboard screen");
+          // showLeaderboard(this);
         } else if(title.screen) {
           console.log("starting game");
           resetGame(this);
@@ -1044,12 +1139,12 @@ function update ()
         // console.log("car x,y = " + car.x_coord + "," + car.y_coord);
       } else if (cursors.down.isDown) {
         if(game_over) {
-          if (leader_board){
-            console.log("reloading game");
+          // if (leader_board){
+          //   console.log("reloading game");
             location.reload(this);
-          }
-          console.log("loading leaderboard screen");
-          showLeaderboard();
+          // }
+          // console.log("loading leaderboard screen");
+          // showLeaderboard();
         } else if(title.screen) {
           console.log("starting game");
           resetGame(this);
@@ -1063,12 +1158,12 @@ function update ()
         // console.log("car x,y = " + car.x_coord + "," + car.y_coord);
       } else if (cursors.up.isDown) {
         if(game_over) {
-          if (leader_board){
-            console.log("reloading game");
+          // if (leader_board){
+          //   console.log("reloading game");
             location.reload();
-          }
-          console.log("loading leaderboard screen");
-          showLeaderboard(this);
+          // }
+          // console.log("loading leaderboard screen");
+          // showLeaderboard(this);
         } else if(title.screen) {
           console.log("starting game");
           resetGame(this);
@@ -1092,7 +1187,7 @@ function update ()
         if(coins.length > 0) {
           if(car_coin.alpha == 0){
             car_coin.alpha = 1;
-            coin_get_sound.play();
+            // coin_get_sound.play();
           }
 
           if(coins.length > 1) {
@@ -1129,7 +1224,7 @@ function update ()
         if(points[car.y_coord][car.x_coord].hasBuilding == "exchange" && !car.atExchange && coins.length > 0) {
           console.log("depositing to exchange");
           car.atExchange = true;
-          exchange_sound.play();
+          // exchange_sound.play();
           car.lag = exchange_lag;
 
 
@@ -1154,7 +1249,7 @@ function update ()
 
         if(points[car.y_coord][car.x_coord].hasBuilding == "bank") {
           console.log("robbing bank");
-          robbery_sound.play();
+          // robbery_sound.play();
           car.lag = rob_lag;
 
           // check which bank is being robbed
@@ -1188,11 +1283,11 @@ function update ()
 
           if(cops_active < cops_max) {
             cops[cops_active].alpha = 1;
-            jail.anims.play('alarm_jail', true);
+            // jail.anims.play('alarm_jail', true);
             cops_active++;
           }
           // cops[coins_got-1].active = true;
-          jail.anims.play('alarm_jail', true);
+          // jail.anims.play('alarm_jail', true);
           console.log("cop number "+ (coins_got-1) + " is active!");
 
           
@@ -1354,19 +1449,19 @@ function update ()
         if(price_direction == 1 && (time % time_to_drop == 0)) {
           console.log("price should drop ");
           price_arrow.play('price_down');
-          theme.volume = 0;
-          theme2.volume = .5;
+          // theme.volume = 0;
+          // theme2.volume = .5;
           price_direction = -1;
           if(cops_active < cops_max) {
             cops[cops_active].alpha = 1;
-            jail.anims.play('alarm_jail', true);
+            // jail.anims.play('alarm_jail', true);
             cops_active++;
           }
         } else if (price_direction == -1 && (time % time_to_rise == 0)){
           console.log("price mooning");
           price_arrow.play('price_up');
-          theme.volume = .5;
-          theme2.volume = 0;
+          // theme.volume = .5;
+          // theme2.volume = 0;
           price_direction = 1;
         }
       
@@ -1431,149 +1526,149 @@ function update ()
   window.addEventListener('load', function() {
 
     // Checking if Web3 has been injected by the browser (Mist/MetaMask)
-    if (typeof web3 !== 'undefined') {
-      // Use Mist/MetaMask's provider
-      web3js = new Web3(web3.currentProvider);
-    } else {
-      console.log('No web3? You should consider trying MetaMask!')
-      // fallback - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
-      web3js = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
-    }
+//     if (typeof web3 !== 'undefined') {
+//       // Use Mist/MetaMask's provider
+//       web3js = new Web3(web3.currentProvider);
+//     } else {
+//       console.log('No web3? You should consider trying MetaMask!')
+//       // fallback - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
+//       web3js = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+//     }
 
-    LeaderboardContract = web3.eth.contract([
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "name": "name",
-        "type": "string"
-      },
-      {
-        "name": "score",
-        "type": "uint256"
-      }
-    ],
-    "name": "setHighscore",
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "name": "addresses",
-    "outputs": [
-      {
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [
-      {
-        "name": "a",
-        "type": "address"
-      }
-    ],
-    "name": "getHighscore",
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [
-      {
-        "name": "a",
-        "type": "address"
-      }
-    ],
-    "name": "getName",
-    "outputs": [
-      {
-        "name": "",
-        "type": "string"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [],
-    "name": "totalPlayers",
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  }
-]);
-    console.log("loaded contract");
-    console.dir(LeaderboardContract);
-    Leaderboard = LeaderboardContract.at('0x3d446e47b4b3f09f9dd2c850b347a5405fa1052a');
-    console.log("instantiated contract at address");
-    console.dir(Leaderboard);
-    Leaderboard.getName(web3.eth.accounts[0], (error,result) => {        
-                              if(!error) {
-                                player_name = result;
-                                if(!result){
-                                  console.log("first time");
-                                  first_time = true;
-                                }
-                                console.log("Leaderboard.getName returned: " + player_name);
-                              } else {
-                                console.log("first time");
-                                first_time = true;
-                                console.log("Leaderboard.getHighscore: player has no record");
-                                console.dir(error);
-                              }
-                            });
+//     LeaderboardContract = web3.eth.contract([
+//   {
+//     "constant": false,
+//     "inputs": [
+//       {
+//         "name": "name",
+//         "type": "string"
+//       },
+//       {
+//         "name": "score",
+//         "type": "uint256"
+//       }
+//     ],
+//     "name": "setHighscore",
+//     "outputs": [
+//       {
+//         "name": "",
+//         "type": "bool"
+//       }
+//     ],
+//     "payable": false,
+//     "stateMutability": "nonpayable",
+//     "type": "function"
+//   },
+//   {
+//     "constant": true,
+//     "inputs": [
+//       {
+//         "name": "",
+//         "type": "uint256"
+//       }
+//     ],
+//     "name": "addresses",
+//     "outputs": [
+//       {
+//         "name": "",
+//         "type": "address"
+//       }
+//     ],
+//     "payable": false,
+//     "stateMutability": "view",
+//     "type": "function"
+//   },
+//   {
+//     "constant": true,
+//     "inputs": [
+//       {
+//         "name": "a",
+//         "type": "address"
+//       }
+//     ],
+//     "name": "getHighscore",
+//     "outputs": [
+//       {
+//         "name": "",
+//         "type": "uint256"
+//       }
+//     ],
+//     "payable": false,
+//     "stateMutability": "view",
+//     "type": "function"
+//   },
+//   {
+//     "constant": true,
+//     "inputs": [
+//       {
+//         "name": "a",
+//         "type": "address"
+//       }
+//     ],
+//     "name": "getName",
+//     "outputs": [
+//       {
+//         "name": "",
+//         "type": "string"
+//       }
+//     ],
+//     "payable": false,
+//     "stateMutability": "view",
+//     "type": "function"
+//   },
+//   {
+//     "constant": true,
+//     "inputs": [],
+//     "name": "totalPlayers",
+//     "outputs": [
+//       {
+//         "name": "",
+//         "type": "uint256"
+//       }
+//     ],
+//     "payable": false,
+//     "stateMutability": "view",
+//     "type": "function"
+//   }
+// ]);
+//     console.log("loaded contract");
+//     console.dir(LeaderboardContract);
+//     Leaderboard = LeaderboardContract.at('0x3d446e47b4b3f09f9dd2c850b347a5405fa1052a');
+//     console.log("instantiated contract at address");
+//     console.dir(Leaderboard);
+//     Leaderboard.getName(web3.eth.accounts[0], (error,result) => {        
+//                               if(!error) {
+//                                 player_name = result;
+//                                 if(!result){
+//                                   console.log("first time");
+//                                   first_time = true;
+//                                 }
+//                                 console.log("Leaderboard.getName returned: " + player_name);
+//                               } else {
+//                                 console.log("first time");
+//                                 first_time = true;
+//                                 console.log("Leaderboard.getHighscore: player has no record");
+//                                 console.dir(error);
+//                               }
+//                             });
 
-    Leaderboard.getHighscore(web3.eth.accounts[0], (error,result) => {        
-                              if(!error) {
-                                personalHighscore = result.c[0];
-                                console.log("Leaderboard.getHighscore returned: " + personalHighscore);
-                              } else {
-                                personalHighscore = 0;
-                                console.log("Leaderboard.getHighscore: player has no record");
-                                console.dir(error);
-                              }
-                            });
+//     Leaderboard.getHighscore(web3.eth.accounts[0], (error,result) => {        
+//                               if(!error) {
+//                                 personalHighscore = result.c[0];
+//                                 console.log("Leaderboard.getHighscore returned: " + personalHighscore);
+//                               } else {
+//                                 personalHighscore = 0;
+//                                 console.log("Leaderboard.getHighscore: player has no record");
+//                                 console.dir(error);
+//                               }
+//                             });
 
 
     // Now you can start your app & access web3 freely:
-    setTimeout(function() {
+    // setTimeout(function() {
       console.log("loading game");
       game = new Phaser.Game(config);
-    }, 5000);
+    // }, 5000);
 
   })
 
